@@ -1,0 +1,8 @@
+Vendored, unmodified, from the official Thru repository (public mirror):
+  repository: https://github.com/Unto-Labs/thru
+  commit:     a058dd8e00ade2a5b81fecfec98dee66330cf300 ("Mirror release v0.4.2", 2026-10-14)
+  paths:      sdks/c/thru-sdk/ (C SDK sources, headers, make system)
+              rpc/abi/type-library/tn_token_program.abi.yaml (official token program ABI)
+  license:    Apache-2.0 (LICENSE and NOTICE copied alongside)
+Purpose: reproducible offline builds and host tests of the Flowstate program. The toolchain
+(riscv64-unknown-elf-gcc, picolibc, blst) is NOT vendored; see docs/DEPLOYMENT.md.

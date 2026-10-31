@@ -1,0 +1,5 @@
+# official CLI connectivity check (cloud workspace), 2026-10-31T11:35:28Z, CLI thru 0.4.2+e47b2a21
+## thru --url https://rpc.alphanet.thru.org getversion
+Error: RPC error: code: 'The service is currently unavailable', message: "dns error", source: tonic::transport::Error(Transport, ConnectError(ConnectError("dns error", Custom { kind: Uncategorized, error: "failed to lookup address information: Name or service not known" })))
+## thru --url https://rpc.betanet.thru.org getversion
+Error: RPC error: code: 'The service is currently unavailable', message: "dns error", source: tonic::transport::Error(Transport, ConnectError(ConnectError("dns error", Custom { kind: Uncategorized, error: "failed to lookup address information: Name or service not known" })))

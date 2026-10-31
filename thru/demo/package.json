@@ -1,0 +1,10 @@
+{
+  "name": "thrubound-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "One-page ThruBound demo (LOCAL SIMULATION). Uses only the public @thrubound/sdk API.",
+  "scripts": { "start": "node server.mjs", "test": "node --test test.mjs" },
+  "dependencies": { "@thrubound/sdk": "file:../sdk", "@thru/sdk": "0.4.2" },
+  "license": "Apache-2.0"
+}

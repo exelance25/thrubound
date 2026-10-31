@@ -1,0 +1,22 @@
+# Expected final output of `bash thru/run_all_tests.sh` (recorded 2026-10-31, commit 78ce2c5 + Phase 7 script,
+# Linux x86-64, Node 22.22.0, Python 3.13, gcc 13.3, z3-solver 5.3.3). Takes about 4-5 minutes; QUICK=1 skips
+# the mutation check (about 2 minutes saved). Timings and the gcc version string will differ on your machine.
+# Full per-step output is written to thru/build/run_all_tests.log.
+
+ThruBound local checks — LOCAL SIMULATION (not a Thru network)
+PASS  host build (real program code + simulated Thru runtime)  —  built build/host/libflowstate_sim.so (gcc ...)
+PASS  Python: functional, adversarial, property, scenarios, model conformance  —  OK          # "Ran 76 tests"
+PASS  independent verifier over all traces  —  PASS: 37/37 traces clean (LOCAL SIMULATION traces) ...
+PASS  verifier tamper tests  —  OK                                                          # "Ran 15 tests"
+PASS  bounded model check (depth 5)  —  PASS: no violation up to depth 5 (18185 states, 65457 transitions, ...)
+PASS  SMT proofs of the abstract model (z3)  —  PASS: 92/92 obligations as expected (z3 5.3.3)
+PASS  SDK: install, build, tests  —  # fail 0                                               # "# pass 12"
+PASS  independent example app (7 gate steps + authority analysis)  —  All demo checks passed (LOCAL SIMULATION).
+PASS  example trace through the independent verifier  —  PASS: 1/1 traces clean ...
+PASS  demo page API test  —  # fail 0                                                       # "# pass 1"
+PASS  program mutation check (20 mutants)  —  mutants caught: 19, equivalent: 1
+
+ALL CHECKS PASSED
+
+# Without z3 installed the SMT line reads:  SKIP  SMT proofs (pip install z3-solver to run)
+# Exit code: 0 when everything passes, 1 if any step fails, 2 if a prerequisite is missing.

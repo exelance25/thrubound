@@ -1,0 +1,32 @@
+## thru --version
+thru 0.4.2+e47b2a21
+## thru dev toolchain install (official route), 2026-10-30T18:17:57Z
+Created default configuration at: /tmp/tmp.Q9NhaskAJQ/.thru/cli/config.yaml
+Fetching latest release...
+Error: Failed to get latest release: error sending request for url (https://api.github.com/repos/Unto-Labs/thru/releases/latest)
+exit=0
+## thru dev sdk --help
+SDK management commands
+
+Usage: thru dev sdk [OPTIONS] <COMMAND>
+
+Commands:
+  install    Install SDK from GitHub releases
+  update     Update SDK to latest version
+  uninstall  Uninstall SDK
+  path       Get SDK installation path
+  help       Print this message or the help of the given subcommand(s)
+
+Options:
+## toolchain install --version v0.4.2
+Installing toolchain version: v0.4.2
+Detected platform: Linux-x86_64
+Installation path: /tmp/tmp.dvgwE81mAe/tc
+Error: Failed to download toolchain: error sending request for url (https://api.github.com/repos/Unto-Labs/thru/releases/tags/v0.4.2)
+## toolchain install --version 0.4.2
+Installing toolchain version: 0.4.2
+Detected platform: Linux-x86_64
+Installation path: /tmp/tmp.dvgwE81mAe/tc
+Error: Failed to download toolchain: error sending request for url (https://api.github.com/repos/Unto-Labs/thru/releases/tags/0.4.2)
+github.com release page: 403
+objects.githubusercontent.com: 404

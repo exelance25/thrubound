@@ -1,0 +1,16 @@
+{
+  "name": "subscription-payer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Independent demo app: an AI agent pays a vendor's subscription through ThruBound (LOCAL SIMULATION).",
+  "scripts": {
+    "start": "node index.mjs",
+    "verify": "python3 ../../thru/verifier/verify_thru.py out/trace.jsonl"
+  },
+  "dependencies": {
+    "@thrubound/sdk": "file:../../thru/sdk",
+    "@thru/sdk": "0.4.2"
+  },
+  "license": "Apache-2.0"
+}

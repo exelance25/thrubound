@@ -1,0 +1,20 @@
+test_approval_signed_by_agent (test_verifier.VerifierMutations.test_approval_signed_by_agent) ... ok
+test_clean_traces_pass (test_verifier.VerifierMutations.test_clean_traces_pass) ... ok
+test_double_execution_of_approval (test_verifier.VerifierMutations.test_double_execution_of_approval) ... ok
+test_dropped_rejection (test_verifier.VerifierMutations.test_dropped_rejection) ... ok
+test_failed_tx_with_events (test_verifier.VerifierMutations.test_failed_tx_with_events) ... ok
+test_inflated_payment_amount (test_verifier.VerifierMutations.test_inflated_payment_amount) ... ok
+test_limit_lowered_below_spent (test_verifier.VerifierMutations.test_limit_lowered_below_spent) ... ok
+test_payment_by_revoked_agent (test_verifier.VerifierMutations.test_payment_by_revoked_agent) ... ok
+test_payment_while_paused (test_verifier.VerifierMutations.test_payment_while_paused) ... ok
+test_replayed_nonce (test_verifier.VerifierMutations.test_replayed_nonce) ... ok
+test_snapshot_spent_tampered (test_verifier.VerifierMutations.test_snapshot_spent_tampered) ... ok
+test_tokens_appear_from_nowhere (test_verifier.VerifierMutations.test_tokens_appear_from_nowhere) ... ok
+test_unlisted_recipient (test_verifier.VerifierMutations.test_unlisted_recipient) ... ok
+test_unpause_after_kill (test_verifier.VerifierMutations.test_unpause_after_kill) ... ok
+test_vault_balance_drained (test_verifier.VerifierMutations.test_vault_balance_drained) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.922s
+
+OK

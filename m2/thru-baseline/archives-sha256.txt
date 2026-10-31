@@ -1,0 +1,7 @@
+fd8bf9e02dfd9e0ca8b174eaf25e7e2b003f9b2e94eebc5f99f5beacf5ab5a41 3983722 /home/claude/agentvault-m1.1.zip
+0f83703b09ff5fe94616c5e6b6a49cf50421b6edcd170206b7fd70d3f4f59faa 932895 /home/claude/agentvault-m1.zip
+538db2b7da3a9c8f74ffdc448bba84cd07651d4ddf400b631a87accab82be658 4352204 /home/claude/agentvault-m2.0-m2.1.zip
+83f2122b2bbd3bcfc41ddf5ba8901c8b70f4b8e6a626aa8345876f29a773ce1c 6242720 /home/claude/agentvault-m2.2-readiness.zip
+64a421f74f91df4922919beac546ba6a1f1f88e362ed2662d5cd2dfbed0d881c 3222990 /mnt/user-data/outputs/agentvault-bf2.zip
+41cc69196f139d1aadea772fe6cb4effb8a43518f98f76943d29bc852932f3b1 5139278 /mnt/user-data/outputs/agentvault-mvp.zip
+1791714f2ed6a620c5e82a247ae430aff39364391cde324f27e0da1ceb4453b7 3187694 /mnt/user-data/outputs/agentvault-p1r2-gate.zip

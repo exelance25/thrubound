@@ -1,0 +1,44 @@
+
+> @thrubound/sdk@0.1.0 test
+> node --test test/*.test.mjs
+
+TAP version 13
+# Subtest: public surface exposes only the documented API
+ok 1 - public surface exposes only the documented API
+  ---
+  duration_ms: 1.854865
+  type: 'test'
+  ...
+# Subtest: addresses come from the official @thru/sdk derivation and the program accepts them
+ok 2 - addresses come from the official @thru/sdk derivation and the program accepts them
+  ---
+  duration_ms: 6.401921
+  type: 'test'
+  ...
+# Subtest: full flow: grant, instant pay, pending, approve, refuse, revoke
+ok 3 - full flow: grant, instant pay, pending, approve, refuse, revoke
+  ---
+  duration_ms: 16.737324
+  type: 'test'
+  ...
+# Subtest: an agent cannot act as owner and the owner cannot act as agent
+ok 4 - an agent cannot act as owner and the owner cannot act as agent
+  ---
+  duration_ms: 5.885083
+  type: 'test'
+  ...
+# Subtest: differential: check() predicts the program's decision for 3,000 random requests
+ok 5 - differential: check() predicts the program's decision for 3,000 random requests
+  ---
+  duration_ms: 1457.557593
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1770.776058

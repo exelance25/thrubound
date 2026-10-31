@@ -1,0 +1,19 @@
+{
+  "name": "thrubound-network-harness",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "ThruBound alphanet end-to-end test (Node) and browser harness. Test network, throw-away test keys and test tokens only.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "e2e": "node alphanet-e2e.mjs",
+    "build:browser": "esbuild harness.mjs --bundle --format=iife --global-name=TBH --platform=browser --target=es2022 --outfile=dist/harness.js"
+  },
+  "dependencies": {
+    "@thru/programs": "0.4.3",
+    "@thru/sdk": "0.4.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

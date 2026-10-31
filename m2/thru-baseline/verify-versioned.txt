@@ -1,0 +1,11 @@
+AgentVault: PASS 180
+AgentVaultP1: PASS 90
+AgentVaultP1R2: PASS 90
+AgentVault: informational verify_p1.py reported findings in 5 runs (not normative for AgentVault; verdict unaffected)
+AgentVaultP1R2: informational verify.py reported findings in 13 runs (not normative for AgentVaultP1R2; verdict unaffected)
+total 360 runs: 360 PASS, 0 FAIL/REFUSED
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.755s
+
+OK

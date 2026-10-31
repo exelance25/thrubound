@@ -1,0 +1,21 @@
+# CLOUD WORKSPACE network diagnosis 2026-10-31T11:35:04Z
+## env: HTTPS_PROXY set: yes
+## rpc.alphanet.thru.org
+DNS (getent): no answer (exit 2)
+TCP direct :443: socket.gaierror: [Errno -2] Name or service not known
+HTTPS via proxy: 000
+## rpc.betanet.thru.org
+DNS (getent): no answer (exit 2)
+TCP direct :443: socket.gaierror: [Errno -2] Name or service not known
+HTTPS via proxy: 000
+## thru.org
+DNS (getent): no answer (exit 2)
+TCP direct :443: socket.gaierror: [Errno -2] Name or service not known
+HTTPS via proxy: 000
+## github.com
+DNS (getent): 140.82.114.3    github.com
+TCP direct :443: connected ('140.82.114.3', 443)
+HTTPS via proxy: 400
+## proxy status endpoint (excerpt: relay failures for thru.org hosts only; the rest of the sandbox proxy configuration was removed for publication)
+2026-10-31T11:35:04.910Z  connect_rejected  host=rpc.alphanet.thru.org:443  detail="gateway answered 403 to CONNECT (policy denial or upstream failure)"
+2026-10-31T11:35:05.210Z  connect_rejected  host=rpc.betanet.thru.org:443  detail="gateway answered 403 to CONNECT (policy denial or upstream failure)"

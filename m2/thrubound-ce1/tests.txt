@@ -1,0 +1,68 @@
+test_agent_account_fields (test_functional.AgentRegistration.test_agent_account_fields) ... ok
+test_invalid_configs_rejected (test_functional.AgentRegistration.test_invalid_configs_rejected) ... ok
+test_update_preserves_counters (test_functional.AgentRegistration.test_update_preserves_counters) ... ok
+test_capacity_is_eight (test_functional.Allowlist.test_capacity_is_eight) ... ok
+test_not_allowlisted_recipient_rejected (test_functional.Allowlist.test_not_allowlisted_recipient_rejected) ... ok
+test_removed_recipient_blocks_payment_and_approval (test_functional.Allowlist.test_removed_recipient_blocks_payment_and_approval) ... ok
+test_agent_may_reject_its_own_request (test_functional.Approval.test_agent_may_reject_its_own_request) ... ok
+test_approve_executes_exactly_the_request (test_functional.Approval.test_approve_executes_exactly_the_request) ... ok
+test_expire_only_after_ttl (test_functional.Approval.test_expire_only_after_ttl) ... ok
+test_owner_reject_releases (test_functional.Approval.test_owner_reject_releases) ... ok
+test_expired_key_cannot_request_or_be_approved_and_renewal_restores (test_functional.Expiry.test_expired_key_cannot_request_or_be_approved_and_renewal_restores) ... ok
+test_key_boundary_is_exclusive (test_functional.Expiry.test_key_boundary_is_exclusive) ... ok
+test_budget_includes_reservations (test_functional.Limits.test_budget_includes_reservations) ... ok
+test_ce1_limits_cannot_drop_below_used (test_functional.Limits.test_ce1_limits_cannot_drop_below_used)
+CE-1 (owner decision 2026-10-30): spent + reserved <= budget and today's daily_used <= daily ... ok
+test_daily_limit_utc_day_and_reset (test_functional.Limits.test_daily_limit_utc_day_and_reset) ... ok
+test_lifetime_budget_exhaustion (test_functional.Limits.test_lifetime_budget_exhaustion) ... ok
+test_per_tx_boundary (test_functional.Limits.test_per_tx_boundary) ... ok
+test_two_times_daily_around_midnight_is_possible_documented (test_functional.Limits.test_two_times_daily_around_midnight_is_possible_documented)
+BF2-2 carried over: fixed UTC day, not a rolling 24 hours. ... ok
+test_kill_is_irreversible_but_withdrawal_remains (test_functional.PauseKill.test_kill_is_irreversible_but_withdrawal_remains) ... ok
+test_pause_blocks_and_unpause_restores (test_functional.PauseKill.test_pause_blocks_and_unpause_restores) ... ok
+test_above_threshold_becomes_pending_and_reserves (test_functional.Payments.test_above_threshold_becomes_pending_and_reserves) ... ok
+test_exact_threshold_is_instant (test_functional.Payments.test_exact_threshold_is_instant) ... ok
+test_instant_payment_moves_tokens_once (test_functional.Payments.test_instant_payment_moves_tokens_once) ... ok
+test_zero_amount_rejected (test_functional.Payments.test_zero_amount_rejected) ... ok
+test_revoke_releases_reservations_and_old_request_never_executes (test_functional.Revocation.test_revoke_releases_reservations_and_old_request_never_executes) ... ok
+test_revoked_agent_cannot_request (test_functional.Revocation.test_revoked_agent_cannot_request) ... ok
+test_bind_token_checks (test_functional.VaultCreation.test_bind_token_checks) ... ok
+test_second_init_of_same_vault_rejected (test_functional.VaultCreation.test_second_init_of_same_vault_rejected) ... ok
+test_ttl_bounds (test_functional.VaultCreation.test_ttl_bounds) ... ok
+test_vault_initialized_with_owner_mint_token_account (test_functional.VaultCreation.test_vault_initialized_with_owner_mint_token_account) ... ok
+test_agent_account_of_another_vault (test_adversarial.AccountSubstitution.test_agent_account_of_another_vault) ... ok
+test_counterfeit_vault_account_not_owned_by_program (test_adversarial.AccountSubstitution.test_counterfeit_vault_account_not_owned_by_program) ... ok
+test_malformed_instructions (test_adversarial.AccountSubstitution.test_malformed_instructions) ... ok
+test_vault_passed_read_only_cannot_be_written (test_adversarial.AccountSubstitution.test_vault_passed_read_only_cannot_be_written) ... ok
+test_flowstate_never_authorizes_the_vault_outside_its_checks (test_adversarial.AlternateTransferRoutes.test_flowstate_never_authorizes_the_vault_outside_its_checks) ... ok
+test_nobody_can_move_vault_tokens_directly (test_adversarial.AlternateTransferRoutes.test_nobody_can_move_vault_tokens_directly) ... ok
+test_approval_of_one_request_cannot_execute_another (test_adversarial.ApprovalBinding.test_approval_of_one_request_cannot_execute_another) ... ok
+test_approval_reuse (test_adversarial.ApprovalBinding.test_approval_reuse) ... ok
+test_every_bound_field_is_checked (test_adversarial.ApprovalBinding.test_every_bound_field_is_checked) ... ok
+test_expired_approval (test_adversarial.ApprovalBinding.test_expired_approval) ... ok
+test_lowered_limits_block_old_approvals (test_adversarial.Concurrency.test_lowered_limits_block_old_approvals) ... ok
+test_pending_requests_cannot_together_exceed_budget (test_adversarial.Concurrency.test_pending_requests_cannot_together_exceed_budget) ... ok
+test_max_values_never_wrap (test_adversarial.Overflow.test_max_values_never_wrap) ... ok
+test_pause_bypass_attempts (test_adversarial.PauseAndRevocationBypass.test_pause_bypass_attempts) ... ok
+test_revocation_bypass_attempts (test_adversarial.PauseAndRevocationBypass.test_revocation_bypass_attempts) ... ok
+test_duplicate_pending_request_account (test_adversarial.Replay.test_duplicate_pending_request_account) ... ok
+test_failed_request_does_not_consume_nonce (test_adversarial.Replay.test_failed_request_does_not_consume_nonce) ... ok
+test_future_and_past_nonce (test_adversarial.Replay.test_future_and_past_nonce) ... ok
+test_same_nonce_twice (test_adversarial.Replay.test_same_nonce_twice) ... ok
+test_attacker_as_its_own_agent_has_no_agent_account (test_adversarial.UnauthorizedAgent.test_attacker_as_its_own_agent_has_no_agent_account) ... ok
+test_attacker_cannot_sign_for_the_agent (test_adversarial.UnauthorizedAgent.test_attacker_cannot_sign_for_the_agent) ... ok
+test_owner_is_not_the_agent (test_adversarial.UnauthorizedAgent.test_owner_is_not_the_agent) ... ok
+test_attacker_cannot_reject_or_init_for_owner (test_adversarial.UnauthorizedOwner.test_attacker_cannot_reject_or_init_for_owner) ... ok
+test_every_owner_action_requires_the_owner (test_adversarial.UnauthorizedOwner.test_every_owner_action_requires_the_owner) ... ok
+test_approval_recipient_account_must_match (test_adversarial.WrongTokenAndRecipient.test_approval_recipient_account_must_match) ... ok
+test_fake_token_program_rejected (test_adversarial.WrongTokenAndRecipient.test_fake_token_program_rejected) ... ok
+test_recipient_token_account_of_another_mint (test_adversarial.WrongTokenAndRecipient.test_recipient_token_account_of_another_mint) ... ok
+test_vault_token_account_substitution (test_adversarial.WrongTokenAndRecipient.test_vault_token_account_substitution) ... ok
+test_random_sequences_hold_all_invariants (test_properties.PropertyCampaign.test_random_sequences_hold_all_invariants) ... 
+  coverage: {'approve:executed': 114, 'approve:fail': 721, 'approve:ok': 114, 'approve_stale:fail': 92, 'approve_tampered:fail': 222, 'direct:fail': 233, 'err:0x2006': 233, 'err:FS_ERR_AGENT_EXPIRED': 480, 'err:FS_ERR_APPROVAL_MISMATCH': 132, 'err:FS_ERR_BAD_ACCOUNT': 4, 'err:FS_ERR_BAD_INSTRUCTION': 4, 'err:FS_ERR_BAD_NONCE': 93, 'err:FS_ERR_BUDGET': 95, 'err:FS_ERR_DAILY': 68, 'err:FS_ERR_INVALID_CONFIG': 411, 'err:FS_ERR_NO_PENDING': 643, 'err:FS_ERR_PAUSED': 837, 'err:FS_ERR_PER_TX': 234, 'err:FS_ERR_RECIPIENT_NOT_ALLOWED': 193, 'err:FS_ERR_REQUEST_EXPIRED': 268, 'err:FS_ERR_REQUEST_NOT_EXPIRED': 37, 'err:FS_ERR_STALE_REQUEST': 53, 'err:FS_ERR_UNAUTHORIZED': 413, 'err:FS_ERR_UNKNOWN_AGENT': 633, 'err:FS_ERR_WRONG_TOKEN': 87, 'expire:fail': 152, 'expire:ok': 107, 'lower_below:fail': 231, 'paid:approved': 114, 'paid:instant': 266, 'pause:ok': 253, 'recipient:ok': 275, 'reject:fail': 158, 'reject:ok': 108, 'request:fail': 2550, 'request:ok': 626, 'revoke:fail': 50, 'revoke:ok': 116, 'set_agent:fail': 180, 'set_agent:ok': 276, 'unauth:fail': 329, 'withdraw:ok': 151}
+ok
+
+----------------------------------------------------------------------
+Ran 59 tests in 4.665s
+
+OK

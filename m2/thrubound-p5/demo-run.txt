@@ -1,0 +1,24 @@
+ThruBound demo — environment: LOCAL-SIMULATION (not a Thru network)
+
+1.   create vault (policy container)                  -> done
+1.   bind vault token account (+ prove mint unfreezable) -> done
+2.   grant agent: 10/payment, 50/day, 200 total, 7 days -> done
+3.   agent pays vendor 5                              -> paid
+4.   agent asks to pay vendor 9 (needs approval)      -> pending
+     policy check for the next 9-unit request (no transaction sent): pending
+4.   owner approves exactly that request              -> approved
+4.   owner approves it a second time                  -> REFUSED (NO_PENDING)
+5.   agent tries 11 (above 10 per payment)            -> REFUSED (PER_TX)
+5.   agent tries to pay a stranger                    -> REFUSED (RECIPIENT_NOT_ALLOWED)
+5.   agent replays an old nonce                       -> REFUSED (BAD_NONCE)
+5.   agent tries to approve for the owner             -> REFUSED (NOT_OWNER)
+6.   agent asks to pay 9 again (pending)              -> pending
+6.   owner revokes the agent                          -> done
+6.   owner (by mistake) approves the old request      -> REFUSED (UNKNOWN_AGENT)
+6.   revoked agent tries to pay                       -> REFUSED (UNKNOWN_AGENT)
+
+7.   read state: agent active=false spent=14 pending=0; vendor balance=14; vault balance=986; mint unfreezable=true
+     trace + on-chain snapshot written to out/trace.jsonl; run `npm run verify` for the independent verifier
+
+All demo checks passed (LOCAL SIMULATION).
+PASS: 1/1 traces clean (LOCAL SIMULATION traces) totals={'tx': 16, 'ok': 9, 'failed': 7, 'paid_instant': 1, 'paid_approved': 1, 'requested': 2, 'closed': 0}

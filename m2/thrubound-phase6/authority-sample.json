@@ -1,0 +1,137 @@
+{
+ "summary": {
+  "VERIFIED": 2,
+  "UNVERIFIED": 9,
+  "RISK": 2
+ },
+ "movers": [
+  {
+   "who": "taBQRDcjTluLrNKuEWaOdrSyPHLWgGsevS5d8TcaUoMH_z",
+   "how": "WITHDRAW (owner)",
+   "upTo": "995 (everything)",
+   "bounded": false
+  },
+  {
+   "who": "taVYCWtW35Km5phkHEe5RWoSR-sJ07hbP0vONnpwhOaWM9",
+   "how": "REQUEST (agent; payments ≤ 8 without approval)",
+   "upTo": "36 today, 186 in total",
+   "bounded": true
+  },
+  {
+   "who": "taBQRDcjTluLrNKuEWaOdrSyPHLWgGsevS5d8TcaUoMH_z",
+   "how": "APPROVE pending requests of taVYCWtW35Km5phkHEe5RWoSR-sJ07hbP0vONnpwhOaWM9",
+   "upTo": "9",
+   "bounded": true
+  }
+ ],
+ "findings": [
+  {
+   "status": "RISK",
+   "title": "Owner taBQRDcjTluLrNKuEWaOdrSyPHLWgGsevS5d8TcaUoMH_z can withdraw everything",
+   "evidence": [
+    "simulated-chain-data",
+    "thrubound-code"
+   ]
+  },
+  {
+   "status": "RISK",
+   "title": "ThruBound program upgrade authority not determined",
+   "evidence": [
+    "simulated-chain-data",
+    "official-doc"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "Held by the official token program address",
+   "evidence": [
+    "simulated-chain-data",
+    "official-sdk",
+    "official-doc"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "The token account is not frozen",
+   "evidence": [
+    "simulated-chain-data",
+    "official-doc"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "Mint has no freeze authority",
+   "evidence": [
+    "simulated-chain-data",
+    "official-doc"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "Mint authority taBQRDcjTluLrNKuEWaOdrSyPHLWgGsevS5d8TcaUoMH_z can mint new supply",
+   "evidence": [
+    "simulated-chain-data",
+    "official-doc"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "Transfer, burn and close authority sits with the vault address",
+   "evidence": [
+    "simulated-chain-data",
+    "official-doc",
+    "official-cli",
+    "official-abi",
+    "inference",
+    "official-doc",
+    "official-sdk",
+    "thrubound-code"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "Vault recorded that its mint has no freeze authority (checked when the token account was bound)",
+   "evidence": [
+    "simulated-chain-data",
+    "thrubound-code"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "Vault is live",
+   "evidence": [
+    "simulated-chain-data",
+    "thrubound-code"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "Agent taVYCWtW35Km5phkHEe5RWoSR-sJ07hbP0vONnpwhOaWM9 is active",
+   "evidence": [
+    "simulated-chain-data",
+    "thrubound-code"
+   ]
+  },
+  {
+   "status": "UNVERIFIED",
+   "title": "ThruBound invokes only the token program, and only `transfer`",
+   "evidence": [
+    "thrubound-code"
+   ]
+  },
+  {
+   "status": "VERIFIED",
+   "title": "No delegate or allowance can exist",
+   "evidence": [
+    "official-abi"
+   ]
+  },
+  {
+   "status": "VERIFIED",
+   "title": "A failed transaction changes nothing except the fee payer's nonce and fee",
+   "evidence": [
+    "official-doc"
+   ]
+  }
+ ]
+}

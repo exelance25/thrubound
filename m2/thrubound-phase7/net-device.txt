@@ -1,0 +1,29 @@
+# LINKED COMPUTER SHELL (Cowork VM on the user's computer) network diagnosis 2026-10-31T11:35:16Z
+# (proxy credentials in the original output were removed; they are per-session sandbox values)
+environment: HTTP(S)_PROXY / ALL_PROXY = http://<redacted>@localhost:3128 ; no_proxy = localhost,127.0.0.1,::1,169.254.0.0/16,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+## rpc.alphanet.thru.org
+DNS (getent): no answer (exit 2)
+TCP direct :443: socket.gaierror: [Errno -3] Temporary failure in name resolution
+HTTPS (curl, env proxy): 000
+## rpc.betanet.thru.org
+DNS (getent): no answer (exit 2)
+TCP direct :443: socket.gaierror: [Errno -3] Temporary failure in name resolution
+HTTPS (curl, env proxy): 000
+## thru.org
+DNS (getent): no answer (exit 2)
+TCP direct :443: socket.gaierror: [Errno -3] Temporary failure in name resolution
+HTTPS (curl, env proxy): 000
+## github.com   (control)
+DNS (getent): no answer (exit 2)
+TCP direct :443: socket.gaierror: [Errno -3] Temporary failure in name resolution
+HTTPS (curl, env proxy): 200
+## verbose CONNECT for rpc.alphanet.thru.org (credentials removed)
+* Trying 127.0.0.1:3128... Connected
+* Establish HTTP proxy tunnel to rpc.alphanet.thru.org:443
+> CONNECT rpc.alphanet.thru.org:443 HTTP/1.1
+< HTTP/1.1 403 Forbidden
+< X-Proxy-Error: blocked-by-allowlist
+## official CLI (thru 0.4.2+a058dd8e from the release .deb, sha256 f864c41f… matches thru-cli-SHA256SUMS)
+thru --url https://rpc.alphanet.thru.org getversion -> RPC error 'The service is currently unavailable': dns error (Temporary failure in name resolution)
+thru --url https://rpc.betanet.thru.org getversion  -> same
+(CLI ran with a throw-away HOME; the auto-generated config was shredded unread.)

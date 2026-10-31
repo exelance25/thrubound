@@ -1,0 +1,24 @@
+date_utc: 2026-10-30T17:26:08Z
+commit: 14f1bf1
+node: v22.22.0 npm: 10.9.4 python: Python 3.13.16
+status lines before: 0
+== npm-ci | exit 0 | 22s | 
+== compile | exit 0 | 9s | Compiled 33 Solidity files successfully (evm targets: cancun, istanbul). 
+== syntax | exit 0 | 0s | syntax ok 
+== test-all | exit 0 | 18s |  ✔ if the on-chain stale check fails (RPC error), the message is NOT sent unverified  ✔ BLOCKED (not PASS) when the RPC is unreachable; nothing is reported as verified  ✔ P1R2 is a proposal only: no deploy path, and its header says not deployed / not audited / not formally verified  ✔ item 6 / KSI-1: the decision record keeps network verification BLOCKED and KSI-1 OPEN  320 passing (17s) 
+== test-app | exit 0 | 5s |  ✔ network check: BLOCKED stays BLOCKED, any FAIL is FAIL, PASS only if every network passes (123ms)  ✔ network check: BLOCKED stays BLOCKED, any FAIL is FAIL, PASS only if every network passes (88ms)  27 passing (4s) 
+== test-p1r2-regress | exit 0 | 5s |  77 passing (5s) 
+== test-p1-regress | exit 3 | 6s |  73 passing (5s)  3 failing 
+== test-dryrun | exit 0 | 27s |  ✔ 7. RPC failure during the on-chain stale check → not sent unverified; sent on the next healthy poll (2065ms)  10 passing (26s) 
+== verify-m1 | exit 0 | 1s | verified 90 runs: 90 pass, 0 fail 
+== verify-selftest | exit 0 | 0s | Ran 8 tests in 0.009s OK 
+== verify-p1 | exit 0 | 0s | checked 90 runs: 0 runs with R-1/R-3 executions, 0 findings {} Ran 3 tests in 0.013s OK 
+== verify-p1r2 | exit 0 | 0s | verified 90 runs (P1R2 semantics): 90 pass, 0 fail/refused Ran 7 tests in 0.067s OK 
+== verify-versioned | exit 0 | 1s | AgentVault: PASS 180 AgentVaultP1: PASS 90 AgentVaultP1R2: PASS 90 AgentVault: informational verify_p1.py reported findings in 5 runs (not normative for AgentVault; verdict unaffected) AgentVaultP1R2: informational verify.py reported findings in 13 runs (not normative for AgentVaultP1R2; verdict unaffected) total 360 runs: 360 PASS, 0 FAIL/REFUSED Ran 8 tests in 0.755s OK 
+== test-forge | exit 0 | 115s | Ran 3 tests for forge/VaultInvariants.t.sol:M1_CoreInvariants Ran 8 tests for forge/VaultInvariants.t.sol:P1R2_Invariants Ran 5 tests for forge/VaultInvariants.t.sol:P1_Invariants OK: invariants hold on M1 core, P1 rev1 and P1R2; coverage gates pass; both probes fail as expected 
+== check-network | exit 1 | 2s | 42161 Arbitrum One: BLOCKED — transport error: Request was cancelled. (rpc https://arb1.arbitrum.io) 421614 Arbitrum Sepolia (testnet): BLOCKED — transport error: Request was cancelled. (rpc https://sepolia-rollup.arbitrum.io) 
+== app-smoke | exit 0 | 0s | OK: GET / -> 200; state: LOCAL CHAIN 31337 AgentVaultP1R2 pending=2 
+app stopped
+M1 bytecode sha256: 241ea9ee41bbfa0cb51eca8dac304c046f3bb3a1bff351d21bdddc46979d4a60
+AgentVault.sol diff vs d64673d: 0 files; P1 rev1 sha256: 2025741bfd860dfd
+status lines after all runs: 0

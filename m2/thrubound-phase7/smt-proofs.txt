@@ -1,0 +1,94 @@
+non-vacuity                                                   request instant          enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      request instant          PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        request instant          PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        request instant          PROVED                     ok
+7. a stale request stays stale                                request instant          PROVED                     ok
+kill is irreversible                                          request instant          PROVED                     ok
+non-vacuity                                                   request pending (new q)  enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      request pending (new q)  PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        request pending (new q)  PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        request pending (new q)  PROVED                     ok
+7. a stale request stays stale                                request pending (new q)  PROVED                     ok
+kill is irreversible                                          request pending (new q)  PROVED                     ok
+non-vacuity                                                   request pending (other)  enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      request pending (other)  PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        request pending (other)  PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        request pending (other)  PROVED                     ok
+7. a stale request stays stale                                request pending (other)  PROVED                     ok
+kill is irreversible                                          request pending (other)  PROVED                     ok
+non-vacuity                                                   approve q                enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      approve q                PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        approve q                PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        approve q                PROVED                     ok
+7. a stale request stays stale                                approve q                PROVED                     ok
+kill is irreversible                                          approve q                PROVED                     ok
+non-vacuity                                                   approve other            enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      approve other            PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        approve other            PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        approve other            PROVED                     ok
+7. a stale request stays stale                                approve other            PROVED                     ok
+kill is irreversible                                          approve other            PROVED                     ok
+non-vacuity                                                   reject/expire q          enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      reject/expire q          PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        reject/expire q          PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        reject/expire q          PROVED                     ok
+7. a stale request stays stale                                reject/expire q          PROVED                     ok
+kill is irreversible                                          reject/expire q          PROVED                     ok
+non-vacuity                                                   reject/expire other      enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      reject/expire other      PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        reject/expire other      PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        reject/expire other      PROVED                     ok
+7. a stale request stays stale                                reject/expire other      PROVED                     ok
+kill is irreversible                                          reject/expire other      PROVED                     ok
+non-vacuity                                                   revoke                   enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      revoke                   PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        revoke                   PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        revoke                   PROVED                     ok
+7. a stale request stays stale                                revoke                   PROVED                     ok
+kill is irreversible                                          revoke                   PROVED                     ok
+non-vacuity                                                   set_agent (existing)     enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      set_agent (existing)     PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        set_agent (existing)     PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        set_agent (existing)     PROVED                     ok
+7. a stale request stays stale                                set_agent (existing)     PROVED                     ok
+kill is irreversible                                          set_agent (existing)     PROVED                     ok
+non-vacuity                                                   pause/unpause            enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      pause/unpause            PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        pause/unpause            PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        pause/unpause            PROVED                     ok
+7. a stale request stays stale                                pause/unpause            PROVED                     ok
+kill is irreversible                                          pause/unpause            PROVED                     ok
+non-vacuity                                                   kill                     enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      kill                     PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        kill                     PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        kill                     PROVED                     ok
+7. a stale request stays stale                                kill                     PROVED                     ok
+kill is irreversible                                          kill                     PROVED                     ok
+non-vacuity                                                   time passes              enabled in some Inv-state  ok
+Inv preserved (J, K, ranges, kill⇒pause)                      time passes              PROVED                     ok
+1-2. spent ≤ budget, reserved ≤ budget                        time passes              PROVED                     ok
+3. nonce never decreases; accepted nonce = n, n' = n+1        time passes              PROVED                     ok
+7. a stale request stays stale                                time passes              PROVED                     ok
+kill is irreversible                                          time passes              PROVED                     ok
+4. revoked agent cannot transact                              request instant          PROVED                     ok
+5. expired permission cannot be used                          request instant          PROVED                     ok
+4. revoked agent cannot transact                              request pending (other)  PROVED                     ok
+5. expired permission cannot be used                          request pending (other)  PROVED                     ok
+4. revoked agent cannot transact                              approve q                PROVED                     ok
+5. expired permission cannot be used                          approve q                PROVED                     ok
+4. revoked agent cannot transact                              approve other            PROVED                     ok
+5. expired permission cannot be used                          approve other            PROVED                     ok
+6. approval valid only for the exact request                  approve q                PROVED                     ok
+7. pending request cannot execute after revocation            approve q                PROVED                     ok
+8. agents sharing a vault: Σpaid ≤ funded, each ≤ own budget  agent 1 pays             PROVED                     ok
+9. recorded spending changes exactly with the vault balance   agent 1 pays             PROVED                     ok
+8. agents sharing a vault: Σpaid ≤ funded, each ≤ own budget  agent 2 pays             PROVED                     ok
+9. recorded spending changes exactly with the vault balance   agent 2 pays             PROVED                     ok
+8. agents sharing a vault: Σpaid ≤ funded, each ≤ own budget  owner withdraws          PROVED                     ok
+9. recorded spending changes exactly with the vault balance   owner withdraws          PROVED                     ok
+8. agents sharing a vault: Σpaid ≤ funded, each ≤ own budget  failed transaction       PROVED                     ok
+9. recorded spending changes exactly with the vault balance   failed transaction       PROVED                     ok
+sanity: without CE-1 the lifetime invariant breaks            set_agent (existing)     COUNTEREXAMPLE             ok
+sanity: without the epoch check a stale request executes      approve q                COUNTEREXAMPLE             ok
+
+PASS: 92/92 obligations as expected (z3 5.3.3)

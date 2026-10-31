@@ -1,0 +1,434 @@
+
+
+  AgentVault — happy path
+    ✔ pays under the approval threshold and records it (707ms)
+    ✔ remainingAllowance reflects the tightest limit (51ms)
+
+  AgentVault — I-OWNFUNDS / limits (adversarial)
+    ✔ rejects a payment above the per-transaction limit (39ms)
+    ✔ rejects once the daily limit is reached and resets the next UTC day (85ms)
+    ✔ rejects once the lifetime budget is exhausted, across days (39ms)
+    ✔ rejects a recipient that is not on the allowlist (fail closed) (40ms)
+    ✔ allowlists are per agent: agent2 cannot use agent's recipient
+    ✔ rejects an expired agent key
+    ✔ rejects a revoked agent and an unknown caller
+    ✔ rejects zero amounts
+    ✔ does not let lowered limits underflow views (45ms)
+    ✔ reverts with no state change when the vault is underfunded (43ms)
+    ✔ rejects invalid configurations
+
+  AgentVault — I-REPLAY (idempotent payment ids)
+    ✔ a retried payment id never pays twice
+    ✔ payment ids are namespaced per agent (no cross-agent griefing)
+
+  AgentVault — human approval
+    ✔ amount above threshold reserves budget and moves no funds
+    ✔ owner approval executes exactly once
+    ✔ only the owner can approve; the agent cannot self-approve
+    ✔ rejection releases the reservation and the daily allowance
+    ✔ the agent may cancel its own request, a stranger may not
+    ✔ requests expire; expired requests cannot be approved
+    ✔ approval re-checks policy: removed recipient or revoked agent blocks execution (97ms)
+    ✔ reserved amounts count against the budget
+    ✔ a release on a later day does not refund today's allowance
+
+  AgentVault — I-GUARD / I-KILL
+    ✔ only the owner can administer (40ms)
+    ✔ an agent cannot withdraw or widen its own limits
+    ✔ pause blocks payments and approvals but not withdrawals (42ms)
+    ✔ kill is irreversible, stops all spending atomically and keeps funds withdrawable (44ms)
+    ✔ ownership moves only through a two-step handover
+
+  AgentVault — I-CONS and unexpected tokens
+    ✔ books direct transfers as unsolicited inflow and keeps the equation exact
+    ✔ owner can withdraw everything including unsolicited inflow
+    ✔ other tokens cannot be spent by agents and can be swept by the owner (38ms)
+
+  AgentVault — reentrancy
+    ✔ a malicious token cannot re-enter pay()
+
+  M1.1 boundary — daily window
+    ✔ [design] fixed UTC window allows 2× daily within 2 seconds across midnight
+    ✔ the second before midnight still belongs to the old window
+
+  M1.1 boundary — expiry instants
+    ✔ agent key works at validUntil−1 and fails at exactly validUntil
+    ✔ approval works at expiresAt−1, fails at expiresAt; expire() works at expiresAt (40ms)
+    ✔ [design] owner can still approve a pending request after the agent key itself expired
+
+  M1.1 — replay and idempotency edge cases
+    ✔ [design] a payment id is burned by an approval request even if later rejected
+    ✔ replaying an executed id with a different amount or recipient is still rejected
+
+  M1.1 — owner withdrawal vs. pending approvals
+    ✔ withdrawal can starve a pending request; approve then fails cleanly and reserve stays consistent (39ms)
+
+  M1.1 — authorization corners
+    ✔ an agent cannot cancel another agent's request
+    ✔ [design] re-enabling a revoked agent keeps its lifetime counters
+    ✔ after kill the owner can still recover a later unsolicited transfer (38ms)
+    ✔ nobody but the owner can approve, even right after an ownership handover is started (41ms)
+
+  M1.1 — real USDC (FiatToken v2.2) with the M1 vault
+    ✔ deposit and pay work unchanged with real USDC behind its proxy (67ms)
+    ✔ [I-CONS assumption made concrete] a blacklisted recipient makes pay revert, a blacklisted vault freezes withdrawals (72ms)
+
+  M1.1 — EIP-3009 (x402 `exact`) compatibility
+    ✔ an EOA payer works through both overloads; a reused nonce is rejected (56ms)
+    ✔ the M1 AgentVault cannot be an EIP-3009 payer (it implements no ERC-1271) (63ms)
+    ERC-1271 contract payer (Stateless1271Payer)
+      ✔ works: the wrapped signature is not 65 bytes, so x402's facilitator picks the `bytes` overload (54ms)
+      ✔ enforces the stateless rules: signer, allowlist, per-tx, window, preimage integrity (88ms)
+      ✔ [NEGATIVE RESULT] cannot enforce daily limit or budget: 40 × 5 USDC = 200 USDC all succeed (262ms)
+
+  M1.1 — payBatch prototype keeps every M1 rule
+    ✔ pays all items and emits one Paid receipt per item (74ms)
+    ✔ groups consecutive same-recipient items into ONE token transfer (79ms)
+    ✔ is atomic: one bad item (non-allowlisted) reverts everything (80ms)
+    ✔ cannot bypass human approval: an item above the threshold reverts the batch (82ms)
+    ✔ daily limit and budget apply to the batch SUM, not per item (148ms)
+    ✔ replay: a duplicate id inside the batch, or an id used by an earlier pay(), reverts (74ms)
+    ✔ per-tx limit, pause, kill, empty and oversized batches (116ms)
+    ✔ a blacklisted recipient anywhere in the batch reverts the whole batch (partial failure = total failure) (76ms)
+
+  M2.0 — vendored Safe bytecode is the official 1.4.1 release
+    ✔ runtime code hashes equal @safe-global/safe-deployments canonical codeHash (also listed for 42161 and 421614) (127ms)
+
+  M2.0 — Safe ownership handover
+    ✔ the Safe becomes owner only after it accepts; the old EOA loses every owner power (125ms)
+    ✔ a Safe signer acting alone (EOA call) has no owner power (100ms)
+    ✔ the old owner address can become an agent only after it stops being owner (agent != owner check) (100ms)
+
+  M2.0 — threshold, replay and binding of Safe approvals
+    ✔ 2-of-3: one signature cannot approve; two can; a stranger's signature does not count (143ms)
+    ✔ the same signed Safe tx cannot be replayed (Safe nonce), and the vault refuses a second approval anyway (115ms)
+    ✔ signatures are bound to chainId and to the Safe: wrong chainId or another Safe → rejected (135ms)
+    ✔ an approval signed for request A cannot execute request B (calldata is part of the signed hash) (102ms)
+
+  M2.0 — every owner function works through the Safe
+    ✔ approve, reject, setPaused, withdraw, setRecipient, revokeAgent, setApprovalTtl, sweep, kill (184ms)
+    ✔ [operational] kill needs the full threshold: with 2-of-3 and two signers unavailable, nobody can kill (89ms)
+
+  M2.0 — Safe configuration is part of the trust base
+    ✔ a Safe module can call the vault as owner WITHOUT owner signatures (modules bypass the threshold) (138ms)
+    ✔ a 1-of-1 Safe is equivalent to an EOA owner (single key decides) (96ms)
+
+  M2.0 — fund-moving paths are exactly: pay (direct), approve, withdraw (+ sweep for non-asset tokens)
+    ✔ ABI scan: the only state-changing functions are the reviewed set
+    ✔ asset can leave only via Paid or Withdrawn: Σ(Paid)+Σ(Withdrawn) equals the vault's outflow (53ms)
+
+  M2.0 — does a pending approval survive …?
+    ✔ kill → NOT executable (IsKilled); reject still releases the reservation (48ms)
+    ✔ pause → NOT executable while paused; executable again after unpause (48ms)
+    ✔ agent revocation → NOT executable (UnknownAgent) (40ms)
+    ✔ [RISK R-1] revoke then re-enable the agent → the OLD request becomes executable again (47ms)
+    ✔ [RISK R-2, design F-6] agent KEY expiry does not block approval of an unexpired request (40ms)
+    ✔ request expiry → NOT executable; anyone can release it
+    ✔ changing approvalTtl does not change the expiry of an existing request
+    ✔ recipient removed → NOT executable; re-added → executable
+    ✔ [RISK R-3] owner LOWERS perTx/budget below the pending amount → approve still pays the old amount (40ms)
+    ✔ raising the approval threshold above the pending amount does NOT convert it into a direct payment
+
+  M2.0 — owner withdrawal and accounting
+    ✔ withdraw cannot exceed the books, even with pending reservations
+    ✔ [RISK R-4, F-8] withdraw may take funds reserved for a pending request; books stay exact
+    ✔ withdraw books unsolicited inflow before checking, so I-CONS holds exactly afterwards
+    ✔ withdraw does not touch agent counters (spent/reserved/daily) — limits are independent of balance
+
+  M2.0 — ownership transfer edge cases
+    ✔ [RISK R-5] a started transfer cannot be cancelled to zero; it can only be redirected (e.g. to the owner itself)
+    ✔ ownership can still be transferred after kill (needed to migrate a dead vault to a Safe)
+    ✔ the pending owner has no power before accepting
+
+  M2.1 notifier — interface and startup safety
+    ✔ embedded event ABI equals exactly the compiled M1 ∪ P1R2 events (drift guard) (54ms)
+    ✔ refuses wrong chainId, wrong token, an address without code, and a signer instead of a provider (96ms)
+    ✔ network table: Arbitrum One and Sepolia are distinct, with documented USDC addresses
+
+  M2.1 notifier — message content
+    ✔ a pending approval produces ONE plain-text message with all identifying fields (160ms)
+    ✔ never claims approval or success, and never includes the memo or policy values (70ms)
+    ✔ security events: kill, pause, ownership transfer started, revoke, allowlist change, withdrawal (78ms)
+    ✔ Paid / Deposited are not notified (no payment-success messages in this phase) (41ms)
+
+  M2.1 notifier — idempotency, duplicates, confirmations
+    ✔ re-scanning overlapping blocks and repeated polls never resend (46ms)
+    ✔ a restarted notifier with the same state file does not resend (55ms)
+    ✔ the same event delivered twice to ingest() is recognised as a duplicate (40ms)
+    ✔ events are not processed before the configured confirmations (50ms)
+
+  M2.1 notifier — stale requests
+    ✔ a request already approved on-chain before delivery is skipped, not sent (50ms)
+    ✔ an expired request is skipped even while it is still Pending on-chain (41ms)
+    ✔ expiry is judged by CHAIN time, not the notifier's wall clock (skewed host clock) (47ms)
+    ✔ the 'time left' in a message is computed from chain time (49ms)
+    ✔ a request queued for retry and decided meanwhile is skipped on the next attempt (59ms)
+    ✔ if the on-chain stale check fails (RPC error), the message is NOT sent unverified
+
+  M2.1 notifier — delivery failures
+    ✔ 429: honours retry_after, then delivers (53ms)
+    ✔ 5xx: exponential backoff, then 'dead' after maxAttempts; never resent afterwards (52ms)
+    ✔ 400 chat not found and 401 bad token are permanent: one attempt, status 'dead' (112ms)
+    ✔ network drop and timeout are retryable and flagged ambiguous (possible duplicate) (359ms)
+    ✔ per-chat rate limit: consecutive sends are spaced by minChatIntervalMs (53ms)
+    ✔ an over-long message is rejected locally as permanent, nothing is sent
+
+  M2.1 notifier — invalid data
+    ✔ malformed events are recorded as invalid and never sent (50ms)
+    ✔ logs from the vault address that are not vault events are marked invalid (not crashed on)
+    ✔ payment ID is reported as not available when the agent call is not a direct pay()
+
+  M2.1 notifier — secrets and read-only guarantees
+    ✔ the bot token never appears in logs, state, or message text (only in the request URL) (52ms)
+    ✔ default transport is the dry-run outbox; the CLI refuses to send without a token (47ms)
+    ✔ notifier source has no signing or transaction-sending code
+    ✔ no tracked file contains a Telegram-token-shaped string; state and env files are git-ignored (141ms)
+
+  P1 revision gate — notifier: ownership start / redirect / cancel / complete, and invalidation (P1-O4)
+    ✔ P1R2 vault: start → redirect → cancel → start → complete produce five distinct, correct messages (75ms)
+    ✔ legacy P1 rev1 cancel signal Started(owner, 0x0) is rendered as CANCELLED, never as STARTED (46ms)
+    ✔ formatter: a zero-address Started never produces 'transfer STARTED' (unit)
+    ✔ P1R2 RequestInvalidated: closed message, no funds moved, not an approval; stale request not announced (52ms)
+
+  M2 — network pre-flight script (local validation only)
+    ✔ PASS for real FiatToken v2.2 behind its proxy and official Safe 1.4.1 code (77ms)
+    ✔ FAIL (not PASS) on wrong chain id, a non-USDC token, and wrong Safe code (60ms)
+    ✔ FAIL when the token address has no code (documented address alone is never accepted)
+    ✔ BLOCKED (not PASS) when the RPC is unreachable; nothing is reported as verified
+    ✔ Safe check requires the canonical listing for THIS chain (75ms)
+    ✔ version evidence: the v2.2-only selectors are present in FiatTokenV2_2 and ABSENT in FiatTokenV2_1 (vendored Circle sources)
+    ✔ the script's real HTTP transport works end-to-end (local JSON-RPC server → PASS) (193ms)
+    ✔ API keys in RPC URLs never reach output
+
+  Proposed patch P1 (not applied)
+    ✔ P1-a closes R-1: revoke + re-enable does NOT revive an old request (47ms)
+    ✔ P1-b closes R-3: lowered perTx or budget blocks approval of an older, larger request (131ms)
+    ✔ P1-b is conservative: a lowered budget blocks ALL approvals until other reservations are released (46ms)
+    ✔ P1 unchanged behaviour: approve still works normally and still respects kill/pause/allowlist (56ms)
+    ✔ P1-c closes R-5: a started ownership transfer can be cancelled
+      gas {"AgentVault":{"request":165549,"approve":86266},"AgentVaultP1":{"request":170066,"approve":95430}}
+    ✔ gas: approve on P1 vs M1 (measured, same scenario) (78ms)
+
+  M2 gates — payment execution stays disabled in this phase
+    ✔ Hardhat has no live network configured (no RPC, no accounts) — nothing can be deployed or paid on-chain
+    ✔ no tracked script sends transactions to a live network (no deploy scripts, no JsonRpcProvider + signer)
+    ✔ experimental contracts are not referenced outside tests and scripts that measure them
+
+  M2 gates — known security issue KSI-1 (EIP-3009 / ERC-1271) stays recorded
+    ✔ the negative-result regression test is present and unchanged in intent
+    ✔ M1 AgentVault exposes no isValidSignature: it cannot authorize EIP-3009 transfers at all
+    ✔ the security register lists KSI-1 as OPEN
+
+  M2 gates — frozen M1 baseline
+    ✔ contracts/AgentVault.sol and the M1 run records are identical to the M1 commit d64673d (401ms)
+    ✔ the pre-registration commit is in history
+    ✔ AgentVault deployed bytecode hash is unchanged since M1
+    ✔ P1 rev1 (AgentVaultP1.sol + its patch) is frozen as the historical record
+    ✔ P1R2 is a proposal only: no deploy path, and its header says not deployed / not audited / not formally verified
+    ✔ the local app can only deploy to the in-process Hardhat network (the one exception above)
+
+  BF-2 conditional acceptance — required evidence stays in place
+    ✔ item 5: the verifier rule table pins the compiled bytecode of M1, P1 rev1 and P1R2, and M1 rules are not normative for P1R2
+    ✔ item 4: the same-block ordering tests are present
+    ✔ items 2 and 3: the UTC-window measurements and the lock-up recovery scenarios are present
+    ✔ item 6 / KSI-1: the decision record keeps network verification BLOCKED and KSI-1 OPEN
+
+  P1 review — R-1: pending requests vs agent revocation / re-enable
+    ✔ revoke → re-enable (same limits) → approve OLD request — AgentVault: ok (50ms)
+    ✔ revoke → re-enable (same limits) → approve OLD request — AgentVaultP1: StaleRequest (42ms)
+    ✔ revoke → LOWER limits (which re-enables the agent) → approve OLD request — AgentVault: ok (38ms)
+    ✔ revoke → LOWER limits (which re-enables the agent) → approve OLD request — AgentVaultP1: StaleRequest
+    ✔ revoke (no re-enable) → approve — AgentVault: UnknownAgent
+    ✔ revoke (no re-enable) → approve — AgentVaultP1: UnknownAgent
+    ✔ revoke twice with re-enable in between → approve request from epoch 0 — AgentVault: ok (43ms)
+    ✔ revoke twice with re-enable in between → approve request from epoch 0 — AgentVaultP1: StaleRequest (43ms)
+    ✔ revoke → re-enable → NEW request → approve — AgentVault: ok (51ms)
+    ✔ revoke → re-enable → NEW request → approve — AgentVaultP1: ok (42ms)
+    ✔ stale request can still be REJECTED (reservation released) — AgentVault: ok
+    ✔ stale request can still be REJECTED (reservation released) — AgentVaultP1: ok
+    ✔ [open in P1] stale request keeps its reservation until rejected/expired: blocks budget — AgentVault: BudgetExceeded (42ms)
+    ✔ [open in P1] stale request keeps its reservation until rejected/expired: blocks budget — AgentVaultP1: BudgetExceeded (45ms)
+
+  P1 review — R-3: approval after the owner lowered limits
+    ✔ lower perTx below the pending amount → approve — AgentVault: ok (40ms)
+    ✔ lower perTx below the pending amount → approve — AgentVaultP1: ExceedsCurrentLimits (43ms)
+    ✔ lower perTx to EXACTLY the pending amount (boundary) → approve — AgentVault: ok (45ms)
+    ✔ lower perTx to EXACTLY the pending amount (boundary) → approve — AgentVaultP1: ok (45ms)
+    ✔ lower budget below committed (perTx still ≥ amount) → approve — AgentVault: ok (46ms)
+    ✔ lower budget below committed (perTx still ≥ amount) → approve — AgentVaultP1: ExceedsCurrentLimits (50ms)
+    ✔ lower budget to exactly committed (boundary) → approve — AgentVault: ok (48ms)
+    ✔ lower budget to exactly committed (boundary) → approve — AgentVaultP1: ok (53ms)
+    ✔ [not re-checked by P1] lower DAILY limit below today's usage → approve — AgentVault: ok (52ms)
+    ✔ [not re-checked by P1] lower DAILY limit below today's usage → approve — AgentVaultP1: ok (43ms)
+    ✔ lower then raise back → approve — AgentVault: ok (39ms)
+    ✔ lower then raise back → approve — AgentVaultP1: ok (91ms)
+    ✔ raise limits → approve — AgentVault: ok (38ms)
+    ✔ raise limits → approve — AgentVaultP1: ok (44ms)
+    ✔ lowered limits: blocked request can be rejected — AgentVault: ok (40ms)
+    ✔ lowered limits: blocked request can be rejected — AgentVaultP1: ok (47ms)
+
+  P1 review — R-5: ownership transfer, cancel, redirect, loss of authority
+    ✔ cancel a started transfer — AgentVault: no-function
+    ✔ cancel a started transfer — AgentVaultP1: ok
+    ✔ transferOwnership(0) is refused (cannot cancel that way) — AgentVault: ZeroAddress
+    ✔ transferOwnership(0) is refused (cannot cancel that way) — AgentVaultP1: ZeroAddress
+    ✔ redirect A → B: A cannot accept, B can — AgentVault: ok (44ms)
+    ✔ redirect A → B: A cannot accept, B can — AgentVaultP1: ok (38ms)
+    ✔ only the owner can cancel — AgentVault: no-function
+    ✔ only the owner can cancel — AgentVaultP1: NotOwner
+    ✔ old owner loses ALL authority after the new owner accepts — AgentVault: NotOwner (43ms)
+    ✔ old owner loses ALL authority after the new owner accepts — AgentVaultP1: NotOwner (45ms)
+    ✔ pending owner has no authority before accepting — AgentVault: NotOwner
+    ✔ pending owner has no authority before accepting — AgentVaultP1: NotOwner
+    ✔ after cancel, a new transfer works — AgentVault: no-function
+    ✔ after cancel, a new transfer works — AgentVaultP1: ok (39ms)
+    ✔ transfer and cancel still possible after kill — AgentVault: no-function (47ms)
+    ✔ transfer and cancel still possible after kill — AgentVaultP1: ok
+    ✔ [P1 event semantics] cancel emits OwnershipTransferStarted(owner, 0x0) — AgentVault: no-function
+    ✔ [P1 event semantics] cancel emits OwnershipTransferStarted(owner, 0x0) — AgentVaultP1: ok
+
+  P1 review — the three intended failures of the M1-era suites on P1, pinned
+    ✔ ABI scan: P1 adds exactly one state-changing function, cancelOwnershipTransfer
+
+  P1R2 — R-1 regression: revoke / re-add generation check (side by side)
+    ✔ revoke → re-add → approve OLD request — AgentVault: ok (44ms)
+    ✔ revoke → re-add → approve OLD request — AgentVaultP1: StaleRequest (49ms)
+    ✔ revoke → re-add → approve OLD request — AgentVaultP1R2: StaleRequest (42ms)
+    ✔ revoke → re-add twice → approve request from epoch 0 — AgentVault: ok (48ms)
+    ✔ revoke → re-add twice → approve request from epoch 0 — AgentVaultP1: StaleRequest (50ms)
+    ✔ revoke → re-add twice → approve request from epoch 0 — AgentVaultP1R2: StaleRequest (49ms)
+    ✔ revoke → re-add → NEW request → approve — AgentVault: ok (53ms)
+    ✔ revoke → re-add → NEW request → approve — AgentVaultP1: ok (39ms)
+    ✔ revoke → re-add → NEW request → approve — AgentVaultP1R2: ok (58ms)
+    ✔ config update WITHOUT revoke keeps the generation → approve — AgentVault: ok (44ms)
+    ✔ config update WITHOUT revoke keeps the generation → approve — AgentVaultP1: ok
+    ✔ config update WITHOUT revoke keeps the generation → approve — AgentVaultP1R2: ok (39ms)
+
+  P1R2 — R-3 regression: limits lowered after the request (side by side)
+    ✔ perTx lowered below the request amount → approve — AgentVault: ok
+    ✔ perTx lowered below the request amount → approve — AgentVaultP1: ExceedsCurrentLimits (42ms)
+    ✔ perTx lowered below the request amount → approve — AgentVaultP1R2: ExceedsCurrentLimits (39ms)
+    ✔ perTx lowered to EXACTLY the amount → approve — AgentVault: ok
+    ✔ perTx lowered to EXACTLY the amount → approve — AgentVaultP1: ok
+    ✔ perTx lowered to EXACTLY the amount → approve — AgentVaultP1R2: ok
+    ✔ budget lowered below committed total (perTx still fits) → approve — AgentVault: ok (53ms)
+    ✔ budget lowered below committed total (perTx still fits) → approve — AgentVaultP1: ExceedsCurrentLimits (43ms)
+    ✔ budget lowered below committed total (perTx still fits) → approve — AgentVaultP1R2: ExceedsCurrentLimits (41ms)
+    ✔ budget lowered to EXACTLY the committed total → approve — AgentVault: ok (38ms)
+    ✔ budget lowered to EXACTLY the committed total → approve — AgentVaultP1: ok
+    ✔ budget lowered to EXACTLY the committed total → approve — AgentVaultP1R2: ok
+
+  P1R2 — R-2: agent key expired before approval (side by side)
+    ✔ agent validUntil passes while the request is still unexpired → approve — AgentVault: ok (38ms)
+    ✔ agent validUntil passes while the request is still unexpired → approve — AgentVaultP1: ok (45ms)
+    ✔ agent validUntil passes while the request is still unexpired → approve — AgentVaultP1R2: AgentExpired (43ms)
+    ✔ approve one second BEFORE validUntil — AgentVault: ok (43ms)
+    ✔ approve one second BEFORE validUntil — AgentVaultP1: ok (41ms)
+    ✔ approve one second BEFORE validUntil — AgentVaultP1R2: ok (42ms)
+    ✔ approve AT validUntil (boundary is exclusive, like pay()) — AgentVault: ok
+    ✔ approve AT validUntil (boundary is exclusive, like pay()) — AgentVaultP1: ok (43ms)
+    ✔ approve AT validUntil (boundary is exclusive, like pay()) — AgentVaultP1R2: AgentExpired
+    ✔ expired key renewed by the owner (no revoke) → approve — AgentVault: ok (42ms)
+    ✔ expired key renewed by the owner (no revoke) → approve — AgentVaultP1: ok (40ms)
+    ✔ expired key renewed by the owner (no revoke) → approve — AgentVaultP1R2: ok
+
+  P1R2 — daily limit is re-checked at approval (P1-O2)
+    ✔ same day: daily lowered to dailyUsed − 1 → approve — AgentVaultP1: ok (45ms)
+    ✔ same day: daily lowered to dailyUsed − 1 → approve — AgentVaultP1R2: DailyLimitExceeded
+    ✔ same day: daily lowered to EXACTLY dailyUsed → approve — AgentVaultP1: ok
+    ✔ same day: daily lowered to EXACTLY dailyUsed → approve — AgentVaultP1R2: ok
+    ✔ same day: limits unchanged → approve — AgentVault: ok
+    ✔ same day: limits unchanged → approve — AgentVaultP1: ok
+    ✔ same day: limits unchanged → approve — AgentVaultP1R2: ok
+    ✔ next day: today's window has room for EXACTLY the amount → approve — AgentVaultP1: ok
+    ✔ next day: today's window has room for EXACTLY the amount → approve — AgentVaultP1R2: ok (43ms)
+    ✔ next day: today's window is 1 unit short (20 already paid today) → approve — AgentVaultP1: ok (43ms)
+    ✔ next day: today's window is 1 unit short (20 already paid today) → approve — AgentVaultP1R2: DailyLimitExceeded (39ms)
+    ✔ next day: today's window has 120 for 20 paid + 100 approved → approve — AgentVaultP1: ok
+    ✔ next day: today's window has 120 for 20 paid + 100 approved → approve — AgentVaultP1R2: ok
+    ✔ next day: after approving 100 into a 100 window, an instant 1 USDC pay — AgentVaultP1: ok (42ms)
+    ✔ next day: after approving 100 into a 100 window, an instant 1 USDC pay — AgentVaultP1R2: DailyLimitExceeded (51ms)
+    ✔ P1R2 accounting: approval on a later day charges today's window, not the creation day (50ms)
+    ✔ P1R2 accounting: same-day approval does NOT double-charge dailyUsed (41ms)
+    ✔ P1R2: a request released on a LATER day does not refund today's window (unchanged M1 rule) (41ms)
+
+  P1R2 — stale requests and budget reservation (P1-O1)
+    ✔ reserved right after revoke (100 pending) — AgentVault: 100
+    ✔ reserved right after revoke (100 pending) — AgentVaultP1: 100
+    ✔ reserved right after revoke (100 pending) — AgentVaultP1R2: 0
+    ✔ revoke → re-add → agent requests the FULL budget again (600) — AgentVault: BudgetExceeded (50ms)
+    ✔ revoke → re-add → agent requests the FULL budget again (600) — AgentVaultP1: BudgetExceeded (54ms)
+    ✔ revoke → re-add → agent requests the FULL budget again (600) — AgentVaultP1R2: ok (61ms)
+    ✔ P1R2: closing a stale request (expire) emits RequestInvalidated, before its TTL, and releases nothing twice (61ms)
+    ✔ P1R2: a CURRENT-epoch request still cannot be expired before its TTL (40ms)
+    ✔ P1R2: stale reject (owner or agent) closes the request without touching reserved (50ms)
+    ✔ P1R2: closing a stale request leaves a LARGER fresh reservation untouched (reject and expire) (55ms)
+    ✔ P1R2: stale requests do not underflow dailyUsed when closed on the same day (47ms)
+    re-approval and double release are rejected
+      ✔ P1R2 reject → expire: second call is NoPendingRequest, accounting exact (45ms)
+      ✔ P1R2 expire → reject: second call is NoPendingRequest, accounting exact (48ms)
+      ✔ P1R2 reject → approve: second call is NoPendingRequest, accounting exact (62ms)
+      ✔ P1R2 expire → approve: second call is NoPendingRequest, accounting exact (56ms)
+      ✔ P1R2 approve → approve: second call is NoPendingRequest, accounting exact (53ms)
+      ✔ P1R2 approve → reject: second call is NoPendingRequest, accounting exact (66ms)
+      ✔ P1R2 stale: expire → expire: second call is NoPendingRequest, accounting exact (57ms)
+      ✔ P1R2 stale: reject → reject: second call is NoPendingRequest, accounting exact (64ms)
+      ✔ P1R2 stale: expire → re-add → approve: second call is NoPendingRequest, accounting exact (64ms)
+
+  P1R2 — combinations: expiry × revoke/re-add × lowered limits × kill
+    ✔ expired AND stale: approve → RequestIsExpired; expire → RequestInvalidated; reserved stays exact (44ms)
+    ✔ revoke → re-add with LOWER limits that would still admit the request → StaleRequest (generation wins) (41ms)
+    ✔ lowered limits + key expiry: renewal with the lowered limits still blocks an over-limit request (40ms)
+    ✔ kill: approve → IsKilled; agent reject, keeper expire and stale invalidation still work; accounting exact (77ms)
+    ✔ pause: approve → IsPaused; after unpause the full set of re-checks still applies (47ms)
+    ✔ recipient de-listed after the request → RecipientNotAllowed; re-listed → ok (41ms)
+    ✔ only the CURRENT owner can approve, at every stage of an ownership transfer (44ms)
+
+  P1R2 — same-block transactions (automine off)
+    ✔ approve + approve of the same key in one block: exactly one payment (46ms)
+    ✔ owner approve + agent reject of the same key in one block: exactly one succeeds, books exact (51ms)
+    ✔ revoke then approve in one block: the approval fails (UnknownAgent), reservation released once (49ms)
+    ✔ approve then revoke in one block: one payment, reserved 0, nothing left to release (41ms)
+    ✔ two keepers expire the same stale request in one block: one succeeds (62ms)
+    ✔ revoke → re-add → approve OLD in one block: StaleRequest even within the same block (43ms)
+
+  P1R2 — R-5 regression: ownership transfer start / redirect / cancel / complete
+    ✔ ABI: P1R2 state-changing functions are exactly the M1 reviewed set + cancelOwnershipTransfer
+    ✔ start: OwnershipTransferStarted(owner, alice)
+    ✔ redirect: second start to bob; alice can no longer accept (41ms)
+    ✔ cancel: OwnershipTransferCancelled(owner, bob), no Started/Transferred event; bob cannot accept (39ms)
+    ✔ cancel with nothing pending → NoPendingTransfer; only the owner may cancel
+    ✔ complete: OwnershipTransferred(owner, alice); pending cleared; old owner loses every owner action
+    ✔ cancel → restart → complete works
+    ✔ [history] P1 rev1 signalled cancel as OwnershipTransferStarted(owner, 0x0) (P1-O4) — kept as record
+
+  P1R2 — gas of approve() (informational, upper bound asserted)
+      approve gasUsed: {"AgentVault":120454,"AgentVaultP1":129630,"AgentVaultP1R2":132351}
+    ✔ approve gas: M1 vs P1 vs P1R2 (same scenario) (106ms)
+
+  BF-2 item 3 — P1R2 temporary payment lock-ups and their recovery
+    ✔ L-1 budget lowered below the committed total blocks EVERY approval; recovery A: reject the other pending request (50ms)
+    ✔ L-1 recovery B: restore the budget (no revoke, epoch unchanged) → both approvals succeed (60ms)
+    ✔ L-2 daily lowered on the same day blocks approvals; recovery A: reject another same-day request (refunds the window) (58ms)
+    ✔ L-2 recovery B: wait for the next UTC day (request TTL long enough) → approval charged to the new day (59ms)
+    ✔ L-3 perTx lowered below the amount: the request can never pass; recovery: reject, agent re-requests within the new perTx (new paymentId) (56ms)
+    ✔ L-4 revocation strands pending requests forever; recovery: keeper closes them, owner re-adds, agent re-requests (66ms)
+    ✔ L-5 stale requests occupy the day window after revoke + re-add; recovery: close them the same day (window refunded) (65ms)
+    ✔ L-5b alternative: after the UTC day changes the stale requests no longer occupy the window (71ms)
+    ✔ L-6 agent key expired with requests pending; recovery: renew with setAgent (no revoke) → approvable again (56ms)
+    ✔ L-6b renewing via revoke + re-add instead does NOT recover the old request (by design: StaleRequest) (58ms)
+    ✔ L-7 the lock outlives the request TTL: the request expires; recovery: anyone expires it, agent re-requests (69ms)
+    ✔ L-8 pause blocks approvals and agent spending; recovery: unpause (re-checks still apply) (48ms)
+    ✔ L-9 owner withdrawal starves a pending request (R-4); recovery: deposit (45ms)
+    ✔ L-10 recipient de-listed; recovery: re-list (42ms)
+    ✔ L-11 kill is NOT a temporary lock: no recovery of payments; every request can still be closed and all funds withdrawn (67ms)
+    ✔ L-12 combined lock (lowered budget + expired key + stale requests + pause) is recovered step by step (89ms)
+
+  BF-2 item 2 — fixed UTC day window around midnight (measured, not a bug fix)
+    ✔ AgentVault: 2 × daily (600) is paid within 6 seconds across UTC midnight; the 7th payment is blocked (71ms)
+    ✔ AgentVaultP1R2: 2 × daily (600) is paid within 6 seconds across UTC midnight; the 7th payment is blocked (69ms)
+    ✔ AgentVault (M1): within calendar day D+1 the agent's payments reach daily + the late-approved amount (400 > 300) (88ms)
+    ✔ AgentVaultP1R2: the late approval is charged to day D+1, so payments within D+1 stay ≤ daily (300) (88ms)
+
+
+  320 passing (17s)

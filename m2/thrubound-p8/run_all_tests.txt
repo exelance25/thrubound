@@ -1,0 +1,15 @@
+
+ThruBound local checks — LOCAL SIMULATION (not a Thru network)
+PASS  host build (real program code + simulated Thru runtime)  —  built build/host/libflowstate_sim.so (gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0)
+PASS  Python: functional, adversarial, property, scenarios, model conformance  —  OK
+PASS  independent verifier over all traces  —  PASS: 37/37 traces clean (LOCAL SIMULATION traces) totals={'tx': 7692, 'ok': 2681, 'failed
+PASS  verifier tamper tests  —  OK
+PASS  bounded model check (depth 5)  —  PASS: no violation up to depth 5 (18185 states, 65457 transitions, 20.6s). Limits per_tx=3
+PASS  SMT proofs of the abstract model (z3)  —  PASS: 92/92 obligations as expected (z3 5.3.3)
+PASS  SDK: install, build, tests  —  # fail 0
+PASS  independent example app (7 gate steps + authority analysis)  —  All demo checks passed (LOCAL SIMULATION).
+PASS  example trace through the independent verifier  —  PASS: 1/1 traces clean (LOCAL SIMULATION traces) totals={'tx': 16, 'ok': 9, 'failed': 7, '
+PASS  demo page API test  —  # fail 0
+PASS  program mutation check (20 mutants)  —  mutants caught: 19, equivalent: 1
+
+ALL CHECKS PASSED

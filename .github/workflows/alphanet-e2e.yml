@@ -1,0 +1,66 @@
+# End-to-end test on the Thru ALPHANET test network. Manual trigger only.
+# 1. Downloads the OFFICIAL Thru toolchain v0.4.2 and C SDK, checks their pinned sha256.
+# 2. Builds the program and checks the binary is byte-identical to the pinned hash.
+# 3. Runs thru/network/alphanet-e2e.mjs: throw-away test keys (memory only, never printed or saved),
+#    native THRU from the official faucet, a test mint without freeze authority, deploy, ThruBound flows,
+#    KSI-1 probes against the real token program. Evidence (public data only) is uploaded as an artifact.
+name: alphanet-e2e
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  THRU_RELEASE: v0.4.2
+  TOOLCHAIN_SHA256: 0b07caad88918696ece94958a9b9525c5bfe4b8dd87d7cbe6440ba165f322686
+  SDK_SHA256: 74c9a763bb898df2bdf38b09f7d44e8dd860d65e5c45d41c532de49a9b6e9627
+  PROGRAM_SHA256: e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6
+jobs:
+  alphanet:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Download official toolchain and C SDK (pinned hashes)
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/thru" && cd "$RUNNER_TEMP/thru"
+          base="https://github.com/Unto-Labs/thru/releases/download/${THRU_RELEASE}"
+          curl -fsSL -o toolchain.tar.gz "$base/thru-toolchain-Linux-x86_64-${THRU_RELEASE}.tar.gz"
+          curl -fsSL -o sdk.tar.gz "$base/thru-program-sdk-c-${THRU_RELEASE}.tar.gz"
+          echo "${TOOLCHAIN_SHA256}  toolchain.tar.gz" | sha256sum -c -
+          echo "${SDK_SHA256}  sdk.tar.gz" | sha256sum -c -
+          tar xzf toolchain.tar.gz && tar xzf sdk.tar.gz && rm toolchain.tar.gz
+          ls
+      - name: Build the program with the official toolchain (must be byte-identical)
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/build" TOOLCHAIN="$RUNNER_TEMP/thru/thru-toolchain-Linux-x86_64-${THRU_RELEASE}" \
+            SDK_SRC="$RUNNER_TEMP/thru/thru-program-sdk-c-${THRU_RELEASE}" bash thru/scripts/build_official.sh
+          BIN="$RUNNER_TEMP/build/program/build/thruvm/bin/flowstate_c.bin"
+          sha256sum "$BIN"
+          echo "${PROGRAM_SHA256}  $BIN" | sha256sum -c -
+          cp "$BIN" "$RUNNER_TEMP/flowstate_c.bin"
+      - name: Alphanet end-to-end test
+        working-directory: thru/network
+        run: |
+          npm ci
+          node alphanet-e2e.mjs "$RUNNER_TEMP/flowstate_c.bin" alphanet-evidence.json
+      - name: Job summary
+        if: always()
+        working-directory: thru/network
+        run: |
+          node -e '
+            const e = JSON.parse(require("fs").readFileSync("alphanet-evidence.json","utf8"));
+            const L = [`## ThruBound on alphanet`, ``, `Program sha256 \`${e.programSha256}\`, deployed at \`${e.deploy?.program ?? "-"}\``, ``,
+              `| Check | Result |`, `|---|---|`, ...e.checks.map(c => `| ${c.name} | ${c.pass ? "PASS" : "FAIL"} |`), ``,
+              `Passed ${e.summary?.passed}/${e.summary?.checks}`, e.error ? `\nError: ${e.error.split("\n")[0]}` : ""];
+            require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, L.join("\n"));' || true
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: alphanet-evidence
+          path: thru/network/alphanet-evidence.json

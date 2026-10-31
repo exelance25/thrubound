@@ -1,0 +1,11 @@
+# toolchain (compile only, NOT executed on Thru VM)
+riscv64-unknown-elf-gcc (13.2.0-11ubuntu1+12) 13.2.0
+binutils-riscv64-unknown-elf 2.42-1ubuntu1+6
+gcc-riscv64-unknown-elf 13.2.0-11ubuntu1+12
+picolibc-riscv64-unknown-elf 1.8.6-2
+blst v0.3.15 rev 6d960cd05d6fe2b5bc9ba161edf0c1a131b87c4c (matches deps.sh pin)
+official pins (deps.sh): riscv-gnu-toolchain 2026.01.23, picolibc 1.8.9, blst v0.3.15
+C SDK libtn_sdk.a: built (make exit 0)
+template hello_c.elf: ELF 64-bit LSB executable, UCB RISC-V, RVC, soft-float ABI, version 1 (SYSV), statically l
+template hello_c.bin sha256: 732d0aaddfaeb63c7062ac5f428bb922e73b1007c427b4c9d7e13248399b935c
+thru mirror commit: a058dd8e00ade2a5b81fecfec98dee66330cf300 (v0.4.2)

@@ -1,0 +1,126 @@
+=== thru token transfer --help
+Transfer tokens between accounts
+
+Usage: thru token transfer [OPTIONS] <FROM> <TO> <AMOUNT>
+
+Arguments:
+  <FROM>    Source token account address
+  <TO>      Destination token account address
+  <AMOUNT>  Amount to transfer
+
+Options:
+      --fee-payer <FEE_PAYER>          Fee payer account (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>  Token program address (ta... or hex); defaults to the on-chain owner of the token account
+  -h, --help                           Print help
+=== thru token burn --help
+Burn tokens from an account
+
+Usage: thru token burn [OPTIONS] <ACCOUNT> <MINT> <AUTHORITY> <AMOUNT>
+
+Arguments:
+  <ACCOUNT>    Token account address
+  <MINT>       Mint account address
+  <AUTHORITY>  Account authority address (must match the selected fee payer)
+  <AMOUNT>     Amount to burn
+
+Options:
+      --fee-payer <FEE_PAYER>          Fee payer and account-authority signer account name (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>  Token program address (ta... or hex); defaults to the on-chain owner of the mint
+  -h, --help                           Print help
+=== thru token close-account --help
+Close a token account
+
+Usage: thru token close-account [OPTIONS] <ACCOUNT> <DESTINATION> <AUTHORITY>
+
+Arguments:
+  <ACCOUNT>      Token account address
+  <DESTINATION>  Destination for remaining balance
+  <AUTHORITY>    Account authority address (must match the selected fee payer)
+
+Options:
+      --fee-payer <FEE_PAYER>          Fee payer and account-authority signer account name (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>  Token program address (ta... or hex); defaults to the on-chain owner of the token account
+  -h, --help                           Print help
+=== thru token freeze-account --help
+Freeze a token account
+
+Usage: thru token freeze-account [OPTIONS] <ACCOUNT> <MINT> <AUTHORITY>
+
+Arguments:
+  <ACCOUNT>    Token account address
+  <MINT>       Mint account address
+  <AUTHORITY>  Freeze authority address (must match the selected fee payer)
+
+Options:
+      --fee-payer <FEE_PAYER>          Fee payer and freeze-authority signer account name (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>  Token program address (ta... or hex); defaults to the on-chain owner of the mint
+  -h, --help                           Print help
+=== thru token thaw-account --help
+Unfreeze a token account
+
+Usage: thru token thaw-account [OPTIONS] <ACCOUNT> <MINT> <AUTHORITY>
+
+Arguments:
+  <ACCOUNT>    Token account address
+  <MINT>       Mint account address
+  <AUTHORITY>  Freeze authority address (must match the selected fee payer)
+
+Options:
+      --fee-payer <FEE_PAYER>          Fee payer and freeze-authority signer account name (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>  Token program address (ta... or hex); defaults to the on-chain owner of the mint
+  -h, --help                           Print help
+=== thru token initialize-mint --help
+Initialize a new token mint
+
+Usage: thru token initialize-mint [OPTIONS] <CREATOR> <TICKER> <SEED>
+
+Arguments:
+  <CREATOR>  Creator address (must match the selected fee payer)
+  <TICKER>   Token ticker symbol (max 8 characters)
+  <SEED>     Seed for mint account derivation (32 bytes hex)
+
+Options:
+      --mint-authority <MINT_AUTHORITY>
+          Mint authority address (optional, defaults to creator)
+      --freeze-authority <FREEZE_AUTHORITY>
+          Freeze authority address (optional)
+      --decimals <DECIMALS>
+          Number of decimal places [default: 9]
+      --state-proof <STATE_PROOF>
+          State proof for mint account creation (hex encoded, optional - will auto-generate if not provided)
+      --fee-payer <FEE_PAYER>
+          Fee payer and creator signer account name (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>
+          Token program address (ta... or hex); defaults to the configured token_program_public_key
+  -h, --help
+          Print help
+=== thru token initialize-account --help
+Initialize a new token account
+
+Usage: thru token initialize-account [OPTIONS] <MINT> <OWNER> <SEED>
+
+Arguments:
+  <MINT>   Mint account address
+  <OWNER>  Account owner address
+  <SEED>   Seed for token account derivation (32 bytes hex)
+
+Options:
+      --state-proof <STATE_PROOF>      State proof for token account creation (hex encoded, optional - will auto-generate if not provided)
+      --fee-payer <FEE_PAYER>          Fee payer account (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>  Token program address (ta... or hex); defaults to the on-chain owner of the mint
+  -h, --help                           Print help
+=== thru token mint-to --help
+Mint new tokens to an account
+
+Usage: thru token mint-to [OPTIONS] <MINT> <TO> <AUTHORITY> <AMOUNT>
+
+Arguments:
+  <MINT>       Mint account address
+  <TO>         Destination token account address
+  <AUTHORITY>  Mint authority address (must match the selected fee payer)
+  <AMOUNT>     Amount to mint
+
+Options:
+      --fee-payer <FEE_PAYER>          Fee payer and mint-authority signer account name (optional, defaults to 'default')
+      --token-program <TOKEN_PROGRAM>  Token program address (ta... or hex); defaults to the on-chain owner of the mint
+  -h, --help                           Print help

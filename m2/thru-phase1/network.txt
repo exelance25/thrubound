@@ -1,0 +1,12 @@
+# 2026-10-30 network probes
+## cloud workspace
+https://rpc.alphanet.thru.org -> curl: (56) CONNECT tunnel failed, response 403 000
+https://rpc.betanet.thru.org -> curl: (56) CONNECT tunnel failed, response 403 000
+https://grpc.thru.org -> curl: (56) CONNECT tunnel failed, response 403 000
+https://thru.org/llms.txt -> curl: (56) CONNECT tunnel failed, response 403 000
+https://scan.thru.org/api/openapi.json -> curl: (56) CONNECT tunnel failed, response 403 000
+https://registry.npmjs.org/@thru/sdk -> 200
+## linked computer shell (recorded from device_bash): rpc.alphanet/rpc.betanet/thru.org/scan.thru.org -> 000 (refused); registry.npmjs.org -> 200; github.com -> 200
+## thru CLI
+thru getversion -> Error: RPC error ... dns error (failed to lookup address information)
+thru dev toolchain install -> Error: Failed to get latest release (api.github.com refused)

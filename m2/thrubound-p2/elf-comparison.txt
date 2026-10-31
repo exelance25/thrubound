@@ -1,0 +1,28 @@
+=== hello_c
+  Class:                             ELF64
+  Type:                              EXEC (Executable file)
+  Machine:                           RISC-V
+  Entry point address:               0x3000000
+  Flags:                             0x1, RVC, soft-float ABI
+  LOAD           0x0000000000001000 0x0000000000000000 0x0000000000000000
+  LOAD           0x0000000000002000 0x0000000003000000 0x0000000000000008
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+sections: Name 0] 1] 2] 3] 4] 5] 6] 7] 8] 9] .debug_str .debug_line_str .debug_frame .symtab .strtab .shstrtab 
+undefined symbols: 0
+dynamic relocs: 0
+bin size 138  sha256 732d0aaddfaeb63c
+bin == objcopy -O binary of elf
+=== flowstate_c
+  Class:                             ELF64
+  Type:                              EXEC (Executable file)
+  Machine:                           RISC-V
+  Entry point address:               0x3000000
+  Flags:                             0x1, RVC, soft-float ABI
+  LOAD           0x0000000000001000 0x0000000000000000 0x0000000000000000
+  LOAD           0x0000000000002000 0x0000000003000000 0x0000000000000008
+  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+sections: Name 0] 1] 2] 3] 4] 5] 6] 7] 8] 9] .debug_line .debug_str .debug_line_str .debug_frame .symtab .strtab .shstrtab 
+undefined symbols: 0
+dynamic relocs: 0
+bin size 27448  sha256 6c23fde3c17da5db
+bin == objcopy -O binary of elf

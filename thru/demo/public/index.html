@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ThruBound demo</title>
+<style>
+  :root {
+    --bg: #f6f7f5; --card: #ffffff; --ink: #17201c; --muted: #5d6a63; --line: #e2e6e3;
+    --accent: #0f6b5c; --accent-soft: #e3f1ed; --ok: #1d7a45; --warn: #9a6400; --bad: #b42318;
+    --ok-soft: #e7f4ec; --warn-soft: #fbf1df; --bad-soft: #fdecea; --on-accent: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111614; --card: #18201d; --ink: #e8eeeb; --muted: #9aa8a1; --line: #2a3530;
+      --accent: #4fc2ac; --accent-soft: #173029; --ok: #5fd08f; --warn: #e9b44c; --bad: #ff7b6e;
+      --ok-soft: #15291e; --warn-soft: #2d2410; --bad-soft: #321613; --on-accent: #0b1f1a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1040px; margin: 0 auto; padding: 28px 16px 64px; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; padding: 3px 9px; border-radius: 99px;
+    background: var(--warn-soft); color: var(--warn); border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent); }
+  h1 { font-size: 30px; margin: 10px 0 6px; letter-spacing: -.01em; }
+  .lede { font-size: 19px; max-width: 760px; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 24px; max-width: 760px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 820px) { .grid { grid-template-columns: 1fr; } }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  h2 { font-size: 15px; margin: 0 0 12px; display: flex; gap: 10px; align-items: center; }
+  h2 .n { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent);
+    display: inline-grid; place-items: center; font-size: 13px; }
+  label { display: grid; grid-template-columns: 1fr minmax(120px, 220px); align-items: center; gap: 8px; margin: 6px 0; color: var(--muted); }
+  input, select { width: 100%; padding: 7px 9px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; }
+  button { font: inherit; font-weight: 600; padding: 8px 14px; border-radius: 9px; border: 1px solid var(--accent); background: var(--accent);
+    color: var(--on-accent); cursor: pointer; }
+  button.ghost { background: transparent; color: var(--accent); }
+  button.danger { background: transparent; color: var(--bad); border-color: color-mix(in srgb, var(--bad) 45%, transparent); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .meter { margin: 10px 0; }
+  .meter .top { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+  .bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 4px; }
+  .bar > i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+  .pill { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+  .pill.ok { background: var(--ok-soft); color: var(--ok); } .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.bad { background: var(--bad-soft); color: var(--bad); }
+  .result { margin-top: 12px; padding: 10px 12px; border-radius: 10px; font-weight: 600; display: none; }
+  .result.ok { background: var(--ok-soft); color: var(--ok); display: block; } .result.warn { background: var(--warn-soft); color: var(--warn); display: block; }
+  .result.bad { background: var(--bad-soft); color: var(--bad); display: block; }
+  .pending { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid var(--line); }
+  ol.log { list-style: none; padding: 0; margin: 0; max-height: 260px; overflow: auto; font-size: 13px; }
+  ol.log li { display: grid; grid-template-columns: 62px 56px 1fr auto; gap: 8px; padding: 6px 0; border-top: 1px solid var(--line); align-items: center; }
+  ul.checks { margin: 0; padding-left: 18px; } ul.checks li { margin: 3px 0; }
+  pre { white-space: pre-wrap; font-size: 12px; background: var(--bg); padding: 10px; border-radius: 8px; border: 1px solid var(--line); margin: 10px 0 0; }
+  .span2 { grid-column: 1 / -1; }
+  code { font-size: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <span class="badge">LOCAL SIMULATION · not a Thru network · no real tokens</span>
+  <h1>ThruBound</h1>
+  <p class="lede"><strong>Give an AI agent permission to spend, not power:</strong> it can pay only within the limits you set, and the Thru program itself enforces them.</p>
+  <p class="sub">This page runs the real ThruBound program code inside a local model of the Thru runtime. Nothing here is a blockchain transaction.</p>
+
+  <div class="grid">
+    <section>
+      <h2><span class="n">1</span>Set the policy</h2>
+      <label>Max per payment <input id="perTransaction" type="number" min="1" value="10"></label>
+      <label>Max per day <input id="perDay" type="number" min="1" value="50"></label>
+      <label>Max in total <input id="lifetime" type="number" min="1" value="200"></label>
+      <label>Ask me above <input id="approvalAbove" type="number" min="0" value="8"></label>
+      <label>Valid for (days) <input id="days" type="number" min="1" value="7"></label>
+      <div class="row"><button id="grant">Give the agent this permission</button></div>
+      <p class="muted">The agent may pay only the vendor. The vault holds 1,000 test tokens.</p>
+      <div id="grantResult" class="result"></div>
+    </section>
+
+    <section>
+      <h2><span class="n">2</span>Agent permission <span id="status" class="pill warn">not granted</span></h2>
+      <div class="meter"><div class="top"><span>Spent in total</span><span id="mLife">–</span></div><div class="bar"><i id="bLife"></i></div></div>
+      <div class="meter"><div class="top"><span>Used today</span><span id="mDay">–</span></div><div class="bar"><i id="bDay"></i></div></div>
+      <p class="muted" id="expiry">–</p>
+      <div class="row">
+        <button class="danger" id="revoke">Revoke</button>
+        <button class="ghost" id="pause">Pause vault</button>
+        <button class="ghost" id="nextDay">Skip to tomorrow</button>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="n">3</span>The agent tries to pay</h2>
+      <label>Amount <input id="amount" type="number" min="0" value="5"></label>
+      <label>To <select id="to"><option value="vendor">Vendor (allowed)</option><option value="stranger">Stranger (not allowed)</option></select></label>
+      <div class="row">
+        <button class="ghost" id="check">Check first (no transaction)</button>
+        <button id="pay">Send as the agent</button>
+      </div>
+      <div id="payResult" class="result"></div>
+      <div id="pendingBox" style="margin-top:12px"></div>
+    </section>
+
+    <section>
+      <h2><span class="n">4</span>Security verification</h2>
+      <p class="muted" style="margin-top:0">Enforced inside the program, not in this page:</p>
+      <ul class="checks">
+        <li>limits per payment, per day and in total; expiry; allowed recipients</li>
+        <li>each request can be used once; approvals match one exact request</li>
+        <li>revoke and pause stop the agent, including requests already waiting</li>
+        <li>limits cannot be set below what was already spent</li>
+      </ul>
+      <div class="row"><button id="verify">Run the independent verifier</button><button class="ghost" id="authority">Who can move these funds?</button></div>
+      <div id="verifyResult" class="result"></div>
+      <pre id="verifyText" style="display:none"></pre>
+      <div id="authorityBox" style="display:none;margin-top:12px"></div>
+      <p class="muted">Not proven yet: behaviour on a real Thru network, and whether the token program lets anyone else move the vault's tokens (KSI-1 is open).</p>
+    </section>
+
+    <section class="span2">
+      <h2><span class="n">5</span>What happened <button class="ghost" id="reset" style="margin-left:auto;padding:4px 10px">Start over</button></h2>
+      <ol class="log" id="log"></ol>
+      <p class="muted" id="who"></p>
+    </section>
+  </div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const REASONS = {
+  PER_TX: "Above the per-payment limit.", DAILY: "Today's limit would be exceeded.", BUDGET: "The total limit would be exceeded.",
+  RECIPIENT_NOT_ALLOWED: "This recipient is not on the allowed list.", UNKNOWN_AGENT: "The agent has no active permission.",
+  AGENT_EXPIRED: "The permission has expired.", PAUSED: "The vault is paused.", KILLED: "The vault was stopped for good.",
+  BAD_NONCE: "Request number already used.", NOT_OWNER: "Only the owner can do this.", UNAUTHORIZED: "Not authorized.",
+  NO_PENDING: "Nothing is waiting for approval under that number.", STALE_REQUEST: "The request is from before a revocation.",
+  REQUEST_EXPIRED: "The request waited too long.", TRANSFER_FAILED: "The vault does not hold enough tokens.",
+  INVALID_CONFIG: "These limits are not allowed (per payment ≤ per day ≤ total; cannot go below what was spent).",
+  ZERO_AMOUNT: "The amount must be above zero.", APPROVAL_MISMATCH: "The approval does not match the request.",
+};
+const plain = (r) => REASONS[r] ?? r;
+let S = null;
+async function api(path, body) {
+  const r = await fetch(path, { method: body === undefined ? "GET" : "POST", headers: { "content-type": "application/json" }, body: body === undefined ? undefined : JSON.stringify(body) });
+  const j = await r.json(); if (j.error) throw new Error(j.error); return j;
+}
+function show(el, kind, text) { el.className = "result " + kind; el.textContent = text; }
+function render(s) {
+  S = s;
+  const p = s.permission;
+  const st = $("status");
+  if (!p) { st.className = "pill warn"; st.textContent = "not granted"; }
+  else if (!p.active) { st.className = "pill bad"; st.textContent = "revoked"; }
+  else if (s.vaultInfo.paused) { st.className = "pill warn"; st.textContent = "vault paused"; }
+  else { st.className = "pill ok"; st.textContent = "active"; }
+  const life = p ? Number(p.spent) + Number(p.pending) : 0, lifeMax = p ? Number(p.limits.lifetime) : 1;
+  const dayMax = p ? Number(p.limits.perDay) : 1, dayUsed = p ? dayMax - Number(p.remaining.today) : 0;
+  $("mLife").textContent = p ? `${p.spent} paid + ${p.pending} waiting / ${p.limits.lifetime}` : "–";
+  $("mDay").textContent = p ? `${dayUsed} / ${dayMax}` : "–";
+  $("bLife").style.width = Math.min(100, 100 * life / lifeMax) + "%";
+  $("bDay").style.width = Math.min(100, 100 * dayUsed / dayMax) + "%";
+  $("expiry").textContent = p ? `Expires ${new Date(Number(p.limits.expiresAt) * 1000).toISOString().slice(0, 10)} (simulated clock) · vendor received ${s.balances.vendor} · vault holds ${s.vaultInfo.balance}` : "Give the agent a permission first.";
+  $("pause").textContent = s.vaultInfo.paused ? "Resume vault" : "Pause vault";
+  $("revoke").disabled = !p || !p.active;
+  const box = $("pendingBox"); box.innerHTML = "";
+  for (const q of s.pending) {
+    const d = document.createElement("div"); d.className = "pending";
+    d.innerHTML = `<span><strong>${q.amount}</strong> to the vendor is waiting for your approval <span class="muted">(#${q.nonce})</span></span>`;
+    const b = document.createElement("span"); b.className = "row"; b.style.marginTop = 0;
+    const mk = (label, cls, fn) => { const x = document.createElement("button"); x.textContent = label; if (cls) x.className = cls; x.onclick = fn; b.appendChild(x); };
+    mk("Approve", "", () => act("/api/approve", { nonce: q.nonce }));
+    mk("Reject", "ghost", () => act("/api/reject", { nonce: q.nonce }));
+    mk("Agent approves itself", "danger", () => act("/api/agent-approves", { nonce: q.nonce }));
+    d.appendChild(b); box.appendChild(d);
+  }
+  $("log").innerHTML = s.log.map((e) => {
+    const cls = e.result === "refused" ? "bad" : e.result === "pending" ? "warn" : "ok";
+    const res = e.result === "refused" ? `refused · ${plain(e.reason)}` : e.result;
+    return `<li><span class="muted">${e.t}</span><span class="muted">${e.actor}</span><span>${e.action}</span><span class="pill ${cls}">${res}</span></li>`;
+  }).join("") || `<li><span></span><span></span><span class="muted">Nothing yet.</span><span></span></li>`;
+  $("who").innerHTML = `Program <code>${s.program.slice(0, 14)}…</code> · vault <code>${s.vault.slice(0, 14)}…</code> · agent <code>${s.actors.agent.slice(0, 14)}…</code> · all addresses are simulated`;
+}
+async function act(path, body) {
+  try { render(await api(path, body ?? {})); const top = S.log[0]; return top; }
+  catch (e) { alert(e.message); }
+}
+$("grant").onclick = async () => {
+  const body = Object.fromEntries(["perTransaction", "perDay", "lifetime", "approvalAbove", "days"].map((k) => [k, $(k).value]));
+  const top = await act("/api/grant", body);
+  if (top) show($("grantResult"), top.result === "done" ? "ok" : "bad", top.result === "done" ? "Permission granted on the (simulated) chain." : plain(top.reason));
+};
+$("check").onclick = async () => {
+  const d = await api("/api/check", { amount: $("amount").value, to: $("to").value });
+  show($("payResult"), d.outcome === "refused" ? "bad" : d.outcome === "pending" ? "warn" : "ok",
+    "Prediction: " + (d.outcome === "instant" ? "would be paid at once." : d.outcome === "pending" ? "would wait for your approval." : plain(d.reason)));
+};
+$("pay").onclick = async () => {
+  const top = await act("/api/pay", { amount: $("amount").value, to: $("to").value });
+  if (!top) return;
+  show($("payResult"), top.result === "refused" ? "bad" : top.result === "pending" ? "warn" : "ok",
+    top.result === "paid" ? "Paid. The program checked every limit first." : top.result === "pending" ? "Above your threshold: waiting for your approval below." : "Refused by the program: " + plain(top.reason));
+};
+$("revoke").onclick = () => act("/api/revoke");
+$("pause").onclick = () => act("/api/pause", { paused: !S.vaultInfo.paused });
+$("nextDay").onclick = () => act("/api/next-day");
+$("reset").onclick = () => { for (const id of ["grantResult", "payResult", "verifyResult"]) $(id).className = "result"; $("verifyText").style.display = "none"; act("/api/reset"); };
+$("verify").onclick = async () => {
+  const v = await api("/api/verify", {});
+  show($("verifyResult"), v.pass ? "ok" : "bad", v.pass ? "PASS: an independent checker replayed every transaction and found no rule broken." : "FAIL: the verifier found a problem.");
+  $("verifyText").style.display = "block"; $("verifyText").textContent = v.report;
+};
+$("authority").onclick = async () => {
+  const r = await api("/api/authority", {});
+  const box = $("authorityBox"); box.style.display = "block";
+  const cls = { RISK: "bad", UNVERIFIED: "warn", VERIFIED: "ok" };
+  const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+  box.innerHTML = `<p class="muted" style="margin:0 0 6px">Can move or block the funds (data: ${esc(r.dataOrigin)}):</p>` +
+    r.movers.map((m) => `<div class="pending"><span>${esc(m.who.slice(0, 12))}… via ${esc(m.how)}</span><span class="pill ${m.bounded ? "ok" : "bad"}">${esc(m.upTo)}${m.bounded ? "" : " · no agent limit"}</span></div>`).join("") +
+    `<p class="muted" style="margin:10px 0 6px">${r.summary.VERIFIED} verified on official sources · ${r.summary.UNVERIFIED} not yet verifiable · ${r.summary.RISK} risks</p>` +
+    r.findings.map((f) => `<div class="pending"><span>${esc(f.title)}</span><span class="pill ${cls[f.status]}">${f.status}</span></div>`).join("");
+};
+api("/api/state").then(render);
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# thru program create <seed> <file> --url http://127.0.0.1:9 (unreachable on purpose), CLI thru 0.4.2+e47b2a21, 2026-10-30T18:24:57Z
+== hello_c.bin
+Info: Creating permanent managed program from file: /home/claude/thru-official/build-hello/build/thruvm/bin/hello_c.bin (138 bytes)
+Info: User seed: thrubound-test
+Info: Step 1: Uploading program to temporary buffer (seed: thrubound-test_temporary)
+Error: Transaction submission error: Failed to get chain info: RPC error: code: 'The service is currently unavailable', message: "tcp connect error", source: tonic::transport::Error(Transport, ConnectError(ConnectError("tcp connect error", 127.0.0.1:9, Os { code: 111, kind: ConnectionRefused, message: "Connection refused" })))
+== flowstate_c.bin
+Info: Creating permanent managed program from file: /home/claude/thru-official/build-flowstate/build/thruvm/bin/flowstate_c.bin (27448 bytes)
+Info: User seed: thrubound-test
+Info: Step 1: Uploading program to temporary buffer (seed: thrubound-test_temporary)
+Error: Transaction submission error: Failed to get chain info: RPC error: code: 'The service is currently unavailable', message: "tcp connect error", source: tonic::transport::Error(Transport, ConnectError(ConnectError("tcp connect error", 127.0.0.1:9, Os { code: 111, kind: ConnectionRefused, message: "Connection refused" })))
+== flowstate_c.elf
+Error: Invalid program file: /home/claude/thru-official/build-flowstate/build/thruvm/bin/flowstate_c.elf
+Error: Reason: ELF file detected; upload the ThruVM .bin program image instead
+== random.bin
+Error: Invalid program file: /tmp/tmp.5VqopKClk5/random.bin
+Error: Reason: invalid program image version byte 0x62; expected 0x01
+== fallback-toolchain flowstate_c.bin (0bdd043fb5d373dd)
+Info: Creating permanent managed program from file: /home/claude/agentvault/thru/program/build/thruvm/bin/flowstate_c.bin (26680 bytes)
+== official-toolchain flowstate_c.bin after KSI-1 mint check (4f49941902c4a1e0161d29280415d9b13d8f23cdc7eeffa94c17703283615e14, 27584 bytes)
+Info: Creating permanent managed program from file: /home/claude/thru-official/out1/program/build/thruvm/bin/flowstate_c.bin (27584 bytes)
+Info: User seed: thrubound-test
+Info: Step 1: Uploading program to temporary buffer (seed: thrubound-test_temporary)
+Error: Transaction submission error: Failed to get chain info: RPC error: code: 'The service is currently unavailable', message: "tcp connect error", source: tonic::transport::Error(Transport, ConnectError(ConnectError("tcp connect error", 127.0.0.1:9, Os { code: 111, kind: ConnectionRefused, message: "Connection refused" })))

@@ -1,0 +1,27 @@
+ThruBound
+Copyright 2026 Exelance
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+Where this repository also contains the legacy AgentVault EVM project, those
+files keep their own MIT license; see LICENSING.md for the path-by-path map.
+
+-----------------------------------------------------------------------
+Third-party components included in this repository
+-----------------------------------------------------------------------
+
+thru/vendor/thru-sdk-c/
+  The official Thru C program SDK v0.4.2 and the official token program ABI,
+  vendored unmodified from https://github.com/Unto-Labs/thru
+  (commit a058dd8e00ade2a5b81fecfec98dee66330cf300).
+  Copyright 2025 Thru Contributors. Licensed under the Apache License 2.0.
+  Its own LICENSE and NOTICE files (including the Firedancer notice,
+  Copyright 2022 Firedancer Contributors) are kept alongside it and apply to
+  those files.
+
+thru/sdk/src/abi.generated.ts
+  Generated from this project's own program headers (thru/program/*.h).
+
+Runtime dependencies installed by npm (not included in this repository):
+  @thru/sdk 0.4.2 (Apache-2.0), @thru/programs 0.4.2 (Apache-2.0),
+  koffi 2.x (MIT), typescript 5.x (Apache-2.0, development only).
+Optional Python dependency (not included): z3-solver (MIT).

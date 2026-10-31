@@ -1,0 +1,50 @@
+# Community intro — DRAFT (not sent)
+
+> **Draft only.** Nothing has been posted anywhere. The owner decides whether, where and when to post.
+>
+> Repository: https://github.com/exelance25/thrubound (Apache-2.0).
+>
+> Suggested place: the Thru developer Discord / forum "show your project" channel, or a GitHub discussion on `Unto-Labs/thru`. Check the channel rules first.
+
+---
+
+**ThruBound: bounded token allowances for agents on Thru (early prototype, looking for feedback)**
+
+Hi all. I've been building a small Thru-native program and want feedback from people who know the runtime better than I do before going further.
+
+**The problem.** Official wallet signing sessions let an app or agent act repeatedly, but as far as I can tell from the docs a session key can sign any intent until it expires. There is no amount, recipient or program limit. For an AI agent paying for APIs or subscriptions, I'd rather give it an allowance than the wallet.
+
+**What ThruBound does.** An owner funds a vault (one token-program token). Each agent key gets:
+- per-payment, daily and lifetime limits;
+- an expiry;
+- a recipient allowlist;
+- an approval threshold. Above it, the payment is reserved until the owner approves that exact request: vault, agent, recipient, token, amount, nonce, expiry and operation are all bound.
+
+Revoking an agent also kills its pending requests. All checks are in the program; the TypeScript SDK is just a client. There is also an authority analyzer that reports who else could move the funds in a vault, a token account or a (legacy v0.4.2) Rate Limiter policy. It labels each finding VERIFIED / UNVERIFIED / RISK.
+
+**What it is not.**
+- It's not a generic gate for arbitrary program calls. ThruBound only covers token transfers. (The Rate Limiter that used to fill that role was removed from the official SDKs in v0.4.3.)
+- It's not a replacement for the Passkey Manager either. The plan is for owners to approve through its `invoke` path, but I haven't run that yet.
+
+**Where it actually stands — please read this part:**
+- Built in C against the official C SDK v0.4.2. It compiles reproducibly with the official toolchain (gcc 15.2.0), and the official program-image validator accepts it.
+- An internal review against the official C-program rules caught one critical bug before release (accounts were resized before being made writable, which the VM rejects); the simulation now enforces that rule.
+- **It has never run on a Thru VM or any network.** My dev environments couldn't reach the RPC endpoints, so everything is tested in a local simulation: the same C code compiled for x86-64 against a model of the runtime and token program.
+- Results:
+  - 77 tests;
+  - bounded model check to depth 6;
+  - mutation testing;
+  - an independent trace verifier;
+  - z3 proofs of 9 safety properties on an abstract model, linked to the C code by 20,000 conformance trials.
+  
+  That last item is **not** a proof of the C code, and none of it is an audit.
+- The biggest open question is the token program itself. My limits only hold if nothing but the account authority (the vault PDA) can transfer, burn or close the vault's token account. Docs and CLI help suggest that, but I haven't confirmed it on chain.
+
+**What I'd love help with:**
+1. Is there any token-program path (delegation, close, burn, freeze, a feature I missed) that can move a PDA-owned token account without the PDA signing?
+2. Are transactions touching the same writable accounts always applied serially, and is block time monotonic?
+3. Would you use something like this instead of a signing session for agent payments? What would stop you?
+
+Code, one-command test run (Linux/WSL) and an example app: https://github.com/exelance25/thrubound. The README lists every limitation I know of.
+
+Thanks — critical feedback especially welcome.

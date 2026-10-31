@@ -1,0 +1,43 @@
+Command-line interface for the Thru blockchain
+
+Usage: thru [OPTIONS] <COMMAND>
+
+Commands:
+  getversion      Get version information from the Thru node
+  gethealth       Get health status of the Thru node
+  getstatus       Get the node's operational status (consensus, repair, heights)
+  getheight       Get cluster block heights
+  getaccountinfo  Get account information for a specific account
+  getbalance      Get balance for a specific account
+  getslotmetrics  Get slot metrics (state counters, distributed fees)
+  transfer        Transfer tokens between accounts
+  uploader        Uploader account commands for arbitrary file payloads
+  abi             ABI management commands
+  keys            Key management commands
+  account         Account management commands
+  program         Program management commands
+  txn             Transaction signing and execution commands
+  util            Utility commands for format conversion
+  token           Token program commands
+  auth            Sign in to Thru Developers without exporting wallet keys
+  faucet          Faucet program commands
+  registrar       Registrar program commands
+  nameservice     Name service program commands
+  wthru           Wrapped Thru (WTHRU) program commands
+  bond            Block-producer (BP) bond program commands
+  validator       Validator program commands
+  feature-gates   Feature gate / chain param commands
+  dev             Developer tools for toolchain and project management
+  network         Network profile management commands
+  debug           Debug commands for transaction analysis
+  help            Print this message or the help of the given subcommand(s)
+
+Options:
+      --json               Output results in JSON format
+      --quiet              Suppress non-essential output (disables version check notifications)
+      --url <URL>          Override RPC URL for this invocation
+      --network <NETWORK>  Use a named network profile for this invocation
+      --insecure           Skip TLS certificate verification (insecure; for self-signed or direct-IP HTTPS endpoints). Disables peer authentication
+  -h, --help               Print help
+  -V, --version            Print version
+thru 0.4.2+e47b2a21

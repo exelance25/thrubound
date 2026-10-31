@@ -1,0 +1,1 @@
+PASS: 37/37 traces clean (LOCAL SIMULATION traces) totals={'tx': 7692, 'ok': 2681, 'failed': 5011, 'paid_instant': 270, 'paid_approved': 118, 'requested': 374, 'closed': 218}

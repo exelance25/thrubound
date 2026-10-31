@@ -1,0 +1,15 @@
+{
+  "environment": "built-in browser of the Claude desktop app on the user's computer (the user's own network), page origin https://thru.org/docs/",
+  "method": "read-only gRPC-Web unary calls (POST, content-type application/grpc-web+proto, empty request message) to thru.services.v1.QueryService as documented in thru.org/docs > gRPC API; no keys, no wallet, no transactions",
+  "official_endpoints_from_docs": {"alphanet": "https://rpc.alphanet.thru.org", "betanet": "https://rpc.betanet.thru.org", "protocols": "gRPC and gRPC-Web"},
+  "first_probe_wrong_content_type": {"request": "content-type application/json", "result": "HTTP 415, content-type application/grpc on all 6 calls (alphanet/betanet x GetHeight/GetChainInfo/GetVersion), 292-1051 ms", "meaning": "DNS, TCP and TLS succeeded; the server is up and requires gRPC framing"},
+  "grpc_web_calls_2026-10-31T11:34Z": {
+    "alphanet": {"GetVersion": "HTTP 200, grpc-status 0; thru-node 0.0.0-local+0b8717c5.dirty, thru-rpc sha-0b8717c, node commit 0b8717c58e7459071d45a759dd8b85be527b96bc dated 2026-10-24T20:44:23Z",
+                 "GetChainInfo": "HTTP 200, grpc-status 0; field1 (chain id) = 1",
+                 "GetHeight": "HTTP 200, grpc-status 0; 4180897 at 11:34:44.087Z, 4180932 at 11:34:52.952Z (+35 in 8.9 s)"},
+    "betanet": {"GetVersion": "HTTP 200, grpc-status 0; thru-node 0.0.0-local+ab92c055.dirty, thru-rpc sha-ab92c05, node commit ab92c055d515716c9ef911bf945e3fda8d570be0 dated 2026-10-29T18:47:29Z",
+                "GetChainInfo": "HTTP 200, grpc-status 0; field1 (chain id) = 2",
+                "GetHeight": "HTTP 200, grpc-status 0; 9713671 at 11:34:44Z, 9713706 at 11:34:53Z (+35 in 8.9 s)"}
+  },
+  "notes": "Response fields were decoded from protobuf wire format without the .proto files; only field numbers are certain, field names follow the docs' descriptions. The browser does not expose DNS/TCP/TLS timings separately; their success is implied by HTTP responses."
+}

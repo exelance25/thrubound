@@ -1,0 +1,75 @@
+===== host build (real program code + simulated Thru runtime) (exit 0)
+built build/host/libflowstate_sim.so (gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0)
+===== Python: functional, adversarial, property, scenarios, model conformance (exit 0)
+Ran 77 tests in 15.191s
+
+OK
+===== independent verifier over all traces (exit 0)
+PASS: 37/37 traces clean (LOCAL SIMULATION traces) totals={'tx': 7692, 'ok': 2681, 'failed': 5011, 'paid_instant': 270, 'paid_approved': 118, 'requested': 374, 'closed': 218}
+===== verifier tamper tests (exit 0)
+Ran 15 tests in 1.052s
+
+OK
+===== bounded model check (depth 5) (exit 0)
+PASS: no violation up to depth 5 (18185 states, 65457 transitions, 20.6s). Limits per_tx=3 daily=5 budget=7 threshold=1 funded=4.
+===== SMT proofs of the abstract model (z3) (exit 0)
+PASS: 92/92 obligations as expected (z3 5.3.3)
+===== SDK: install, build, tests (exit 0)
+# pass 12
+# fail 0
+===== independent example app (7 gate steps + authority analysis) (exit 0)
+ThruBound demo — environment: LOCAL-SIMULATION (not a Thru network)
+
+1.   create vault (policy container)                  -> done
+1.   bind vault token account (+ prove mint unfreezable) -> done
+2.   grant agent: 10/payment, 50/day, 200 total, 7 days -> done
+3.   agent pays vendor 5                              -> paid
+4.   agent asks to pay vendor 9 (needs approval)      -> pending
+     policy check for the next 9-unit request (no transaction sent): pending
+4.   owner approves exactly that request              -> approved
+4.   owner approves it a second time                  -> REFUSED (NO_PENDING)
+5.   agent tries 11 (above 10 per payment)            -> REFUSED (PER_TX)
+5.   agent tries to pay a stranger                    -> REFUSED (RECIPIENT_NOT_ALLOWED)
+5.   agent replays an old nonce                       -> REFUSED (BAD_NONCE)
+5.   agent tries to approve for the owner             -> REFUSED (NOT_OWNER)
+6.   agent asks to pay 9 again (pending)              -> pending
+6.   owner revokes the agent                          -> done
+6.   owner (by mistake) approves the old request      -> REFUSED (UNKNOWN_AGENT)
+6.   revoked agent tries to pay                       -> REFUSED (UNKNOWN_AGENT)
+
+7.   read state: agent active=false spent=14 pending=0; vendor balance=14; vault balance=986; mint unfreezable=true
+     trace + on-chain snapshot written to out/trace.jsonl; run `npm run verify` for the independent verifier
+
+8.   authority analysis: 2 VERIFIED, 9 UNVERIFIED, 2 RISK (data: local-simulation)
+     RISK  Owner ta4bT0YQNzBoL9YocXg7GjJYg1haqzAslQpW2JIIiN8RFt can withdraw everything
+     RISK  ThruBound program upgrade authority not determined
+     can move: ta4bT0YQNzBo… via WITHDRAW (owner), up to 986 (everything) (not limited by agent policy)
+
+All demo checks passed (LOCAL SIMULATION).
+===== example trace through the independent verifier (exit 0)
+PASS: 1/1 traces clean (LOCAL SIMULATION traces) totals={'tx': 16, 'ok': 9, 'failed': 7, 'paid_instant': 1, 'paid_approved': 1, 'requested': 2, 'closed': 0}
+===== demo page API test (exit 0)
+# pass 1
+# fail 0
+===== program mutation check (20 mutants) (exit 0)
+adapter:create_not_writable: caught (FAILED (failures=76))
+adapter:no_freeze_check: caught (FAILED (failures=1))
+adapter:no_owner_check: caught (FAILED (failures=1))
+adapter:no_signer_auth: caught (FAILED (failures=3))
+adapter:no_token_program_check: caught (FAILED (failures=1))
+adapter:no_vault_token_check: caught (FAILED (failures=1))
+core:allow_budget_below_spent: caught (FAILED (failures=2))
+core:allow_daily_below_used: caught (FAILED (failures=3))
+core:no_approval_binding: caught (FAILED (failures=3))
+core:no_approve_daily: EQUIVALENT (not counted) - same-day branch of fs_approve: daily_used <= daily already holds in every reachable state (request-time DAILY check + CE-1 / I-16), so 'daily_used > daily' can never be true there; kept as defence in depth. Bounded model check (depth 6) finds no state where it fires.
+core:no_budget: caught (FAILED (failures=8))
+core:no_daily: caught (FAILED (failures=8))
+core:no_epoch_check: caught (FAILED (failures=4, errors=1))
+core:no_key_expiry: caught (FAILED (failures=4))
+core:no_nonce: caught (FAILED (failures=6))
+core:no_per_tx: caught (FAILED (failures=10))
+core:no_recipient_check: caught (FAILED (failures=3))
+core:release_double: caught (FAILED (failures=1, errors=1))
+core:revoke_keeps_reserved: caught (FAILED (failures=4))
+core:unpause_after_kill: caught (FAILED (failures=1))
+mutants caught: 19, equivalent: 1

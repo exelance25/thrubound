@@ -1,0 +1,4 @@
+toolchain tarball thru-toolchain-Linux-x86_64-v0.4.2.tar.gz 1110898953 bytes sha256 0b07caad88918696ece94958a9b9525c5bfe4b8dd87d7cbe6440ba165f322686 (same hash downloaded on the linked computer and in the cloud workspace; the release publishes no checksum for this asset)
+sdk tarball thru-program-sdk-c-v0.4.2.tar.gz sha256 74c9a763bb898df2bdf38b09f7d44e8dd860d65e5c45d41c532de49a9b6e9627; thru-sdk/ identical (diff -r) to thru/vendor/thru-sdk-c/thru-sdk
+deb thru_0.4.2_amd64.deb sha256 f864c41f… matches thru-cli-SHA256SUMS; contains only /usr/bin/thru
+release v0.4.2 published 2026-10-14T01:45:45Z (GitHub API, fetched from the linked computer)

@@ -1,0 +1,2 @@
+42161 Arbitrum One: BLOCKED — transport error:  Request was cancelled. (rpc https://arb1.arbitrum.io)
+421614 Arbitrum Sepolia (testnet): BLOCKED — transport error:  Request was cancelled. (rpc https://sepolia-rollup.arbitrum.io)

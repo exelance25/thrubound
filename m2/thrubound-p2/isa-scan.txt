@@ -1,0 +1,9 @@
+== hello_c.elf
+distinct mnemonics: 18
+csr/float/atomic/fence.i: 
+ecall count: 3
+== flowstate_c.elf
+distinct mnemonics: 82
+csr/float/atomic/fence.i: 
+ecall count: 8
+add add.uw addi addiw addw and andi andn auipc beq bge bgeu bltu bne bseti c.add c.addi c.addi16sp c.addi4spn c.addiw c.addw c.and c.andi c.beqz c.bnez c.j c.jr c.ld c.ldsp c.li c.lui c.lw c.lwsp c.mv c.or c.sd c.sdsp c.slli c.srai c.srli c.sub c.sw c.swsp c.xor divu ecall jal lbu ld lhu lui lw lwu maxu mul mulhu or ori rev8 sb sd sh sh1add sh2add sh3add sha256sig0 sha256sig1 sha256sum0 sha256sum1 slli slliw sltiu sltu srai srli srliw sub subw sw xor xori zext.h 

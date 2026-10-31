@@ -1,0 +1,9 @@
+test_random_transitions_agree (test_model_conformance.Conformance.test_random_transitions_agree) ... 
+  conformance trials per transition: {'approve q': 3319, 'reject/expire q': 3288, 'request instant': 1755, 'request pending (new q)': 2311, 'revoke': 3915, 'set_agent (existing)': 4006}
+  of which accepted by both C and model: {'approve q': 126, 'reject/expire q': 685, 'request instant': 199, 'request pending (new q)': 201, 'revoke': 2723, 'set_agent (existing)': 1215}
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 69.068s
+
+OK
