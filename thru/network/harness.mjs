@@ -49,7 +49,8 @@ function summarize(label, signature, u) {
 
 export async function createEoa(name) {
   // Fee-payer activation needs one state unit (runtime error -497 otherwise; official wallet code uses stateUnits: 1).
-  const tx = await thru.accounts.create({ publicKey: K[name].publicKey, header: { stateUnits: 1 } });
+  // Resource limits as in the official CLI (thru-base build_create_with_fee_payer_proof): zero limits make the VM fail (-767).
+  const tx = await thru.accounts.create({ publicKey: K[name].publicKey, header: { computeUnits: 10000, memoryUnits: 10000, stateUnits: 1 } });
   const sig = await tx.sign(K[name].privateKey);
   const u = await track(tx.toWire());
   return summarize(`create EOA ${name}`, sig, u);
@@ -59,7 +60,10 @@ export async function createEoa(name) {
 export async function send(label, signer, program, readWrite, readOnly, data, header) {
   const built = await thru.transactions.buildAndSign({
     feePayer: { publicKey: K[signer].publicKey, privateKey: K[signer].privateKey },
-    program, accounts: { readWrite, readOnly }, instructionData: data, header,
+    program, accounts: { readWrite, readOnly }, instructionData: data,
+    // Defaults follow the official CLI for token/faucet calls (compute 300,000, memory 10,000); ThruBound calls
+    // that also invoke the token program get more compute. Account-creating calls pass stateUnits: 1.
+    header: { computeUnits: 600000, memoryUnits: 10000, stateUnits: 0, ...(header ?? {}) },
   });
   const u = await track(built.rawTransaction);
   return summarize(label, built.signature, u);
