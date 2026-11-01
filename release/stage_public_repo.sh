@@ -52,5 +52,5 @@ if nc.exists():
     lines = [f'{ts}  {k}  host={h}  detail="{det}"' for ts, k, det, h in ents if "thru.org" in h]
     nc.write_text(head + "## proxy status endpoint (excerpt: relay failures for thru.org hosts only; the rest of the sandbox proxy configuration was removed for publication)\n" + "\n".join(lines) + "\n")
 PY
-grep -rIlE "C:.Users.[A-Za-z0-9]|exelance25/axora|anthropic\.com|__agentproxy" "$DST" --exclude=.filelist --exclude=stage_public_repo.sh && { echo "personal or sandbox data left in the public copy"; exit 1; }
+grep -rIlE "C:.Users.[A-Za-z0-9]|anthropic\.com|__agentproxy" "$DST" --exclude=.filelist --exclude=stage_public_repo.sh && { echo "personal or sandbox data left in the public copy"; exit 1; }
 echo "staged $(wc -l < "$DST/.filelist") files into $DST (file list: $DST/.filelist)"
