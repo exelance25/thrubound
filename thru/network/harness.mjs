@@ -58,6 +58,9 @@ export async function createEoa(name) {
 
 /** Build, sign (fee payer = signer) and send one instruction; data(ctx) gets the official account ordering. */
 export async function send(label, signer, program, readWrite, readOnly, data, header) {
+  // Official rule: no duplicate accounts. The fee payer is index 0, so drop it (and repeats) from the lists.
+  const uniq = (xs, skip) => xs.filter((x, i) => !skip.includes(x) && xs.indexOf(x) === i);
+  readWrite = uniq(readWrite, [A[signer]]); readOnly = uniq(readOnly, [A[signer], ...readWrite]);
   const built = await thru.transactions.buildAndSign({
     feePayer: { publicKey: K[signer].publicKey, privateKey: K[signer].privateKey },
     program, accounts: { readWrite, readOnly }, instructionData: data,
