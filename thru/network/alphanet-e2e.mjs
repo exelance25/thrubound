@@ -16,9 +16,10 @@ const E = { network: "alphanet", rpc: H.RPC, startedAt: new Date().toISOString()
 const ERR = { PER_TX: 0x100f, BAD_NONCE: 0x100c, RECIPIENT_NOT_ALLOWED: 0x100e, NOT_AGENT: 0x1004, APPROVAL_MISMATCH: 0x1017,
   NO_PENDING: 0x1013, UNKNOWN_AGENT: 0x100a };
 let failures = 0;
-const save = () => writeFileSync(outPath, JSON.stringify(E, null, 2));
-function step(r) { E.steps.push(r); console.log(`${r.ok ? "ok  " : "FAIL"} ${r.label}  sig=${r.signature ?? "-"}  vmError=${r.vmError} user=${r.userErrorCode}`); save(); return r; }
-function check(name, pass, detail) { E.checks.push({ name, pass, detail }); if (!pass) failures++; console.log(`${pass ? "PASS" : "FAIL"}  ${name}${detail ? "  — " + detail : ""}`); save(); }
+const big = (_, x) => (typeof x === "bigint" ? x.toString() : x);
+const save = () => writeFileSync(outPath, JSON.stringify(E, big, 2));
+function step(r) { E.steps.push(r); console.log(`${r.ok ? "tx ok      " : "tx refused "} ${r.label}  sig=${r.signature ?? "-"}  vmError=${r.vmError} user=${r.userErrorCode}`); save(); return r; }
+function check(name, pass, detail) { E.checks.push({ name, pass, detail: typeof detail === "string" ? detail : JSON.stringify(detail, big) }); if (!pass) failures++; console.log(`${pass ? "PASS" : "FAIL"}  ${name}${detail ? "  — " + detail : ""}`); save(); }
 const must = (r) => { step(r); check(r.label + " succeeds", r.ok, `vmError=${r.vmError} user=${r.userErrorCode}`); if (!r.ok) throw new Error("required step failed: " + r.label); return r; };
 const refused = (r, code, why) => { step(r); const u = BigInt(r.userErrorCode ?? 0);
   check(`${why} is refused on chain`, !r.ok && (code === undefined || u === BigInt(code)),
