@@ -52,4 +52,4 @@
 - The upgrade authority of the program is undetermined.
 - The token program's real authority rules are unverified (KSI-1).
 - Concurrency (H2) and time monotonicity (H3) are unverified.
-- No audit and no on-chain test.
+- No audit. The on-chain test so far is one alphanet run (42/42), not mainnet.

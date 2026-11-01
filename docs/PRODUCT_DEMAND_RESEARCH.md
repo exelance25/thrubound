@@ -1,5 +1,7 @@
 # ThruBound — product demand research (2026-10-31)
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 > **No user interviews were conducted. Demand is NOT validated.**
 
 Everything below comes from public sources, the official Thru repository and docs, and Thru's GitHub issue tracker. A use case marked "fits" means ThruBound's design could serve it, **not** that anyone has asked for it.

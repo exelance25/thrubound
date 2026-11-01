@@ -1,5 +1,15 @@
 # Flowstate on Thru — test report (2026-10-30)
 
+## Update 2026-11-01: alphanet live test
+
+| Check | Where | Result |
+|---|---|---|
+| Official-toolchain build on GitHub, byte-identical to the pinned hash | `alphanet-e2e` workflow | **PASS** |
+| Deploy + ThruBound flows + refusals + KSI-1 probes | Thru alphanet, real transactions | **PASS 42/42** (`m2/thrubound-alphanet/EVIDENCE.md`) |
+| Local suites (77 Python tests, verifier, model check, SMT, 20 mutants) | GitHub `ci` workflow and locally | **PASS** |
+
+Rows below marked "NOT RUN / BLOCKED" for network execution are earlier, dated results.
+
 **Everything in this report ran in a LOCAL SIMULATION**: the real program sources (`flowstate_core.c`, `flowstate.c`) compiled for the host and linked against `thru/sim/` (a host implementation of the Thru SDK syscalls used, and a model of the token program's `transfer`). **No Thru VM, no Thru network, no real tokens.** No audit or formal verification has been performed.
 
 Environment: Linux x86-64, Python 3.13.16, gcc 13.3.0 with `-Wall -Wextra -Wconversion -Werror -fsanitize=undefined -fno-sanitize-recover=all`; RISC-V build with riscv64-unknown-elf-gcc 13.2.0. Raw outputs: `m2/thru-phase3/`.

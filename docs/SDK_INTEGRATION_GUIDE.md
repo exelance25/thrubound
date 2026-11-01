@@ -1,4 +1,6 @@
-# ThruBound SDK — integration guide (v0.1.0, LOCAL SIMULATION only)
+# ThruBound SDK — integration guide (v0.1.0)
+
+> **Scope:** the SDK's only transport today is the local simulation. The program itself has run on the Thru alphanet. Network calls are shown in the test harness `thru/network/harness.mjs`, which is not yet part of the SDK.
 
 > **Environment.** The SDK talks to the ThruBound program through a `Transport`. The only transport that exists is `LocalSimulationTransport`: the real program code, compiled for your machine, running inside a model of the Thru runtime.
 >

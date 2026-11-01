@@ -2,8 +2,6 @@ ThruBound
 Copyright 2026 Exelance
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
-Where this repository also contains the legacy AgentVault EVM project, those
-files keep their own MIT license; see LICENSING.md for the path-by-path map.
 
 -----------------------------------------------------------------------
 Third-party components included in this repository

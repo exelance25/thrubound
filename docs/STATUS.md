@@ -1,4 +1,4 @@
-# Flowstate on Thru — status (2026-10-30)
+# ThruBound — status
 
 ## ThruBound — ALPHANET LIVE TEST (2026-11-01)
 
@@ -7,6 +7,10 @@
 - **Flows:** vault, mint check, agent, recipient, instant payment, pending → approve, and refusals: PER_TX, RECIPIENT_NOT_ALLOWED, BAD_NONCE, NOT_AGENT, APPROVAL_MISMATCH, NO_PENDING, UNKNOWN_AGENT after revoke. Withdraw succeeded. Final balances 886 / 14 / 100.
 - **KSI-1:** the real token program refused direct transfer, burn, close and freeze of the vault account.
 - **Evidence:** `m2/thrubound-alphanet/EVIDENCE.md`. Test keys were throw-away and never saved; only faucet and test tokens were used. Not mainnet. Not an audit.
+
+---
+
+*Everything below this line is dated history, kept unchanged as a record. The current state is the section above.*
 
 ## ThruBound — security review and alphanet preparation (2026-10-31, branch `feature/thrubound`)
 

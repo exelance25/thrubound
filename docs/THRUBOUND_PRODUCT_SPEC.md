@@ -1,5 +1,7 @@
 # ThruBound — product specification (DRAFT, 2026-10-30)
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 **Status: draft. Option A was chosen by the owner on 2026-10-30 (D-12).** The overall shape follows option A in `PRODUCT_DIFFERENTIATION.md` (compose with Thru's Rate Limiter and Passkey Manager, plus a thin extension program). Nothing in this document is implemented as ThruBound yet. The Flowstate program and tests on this branch are the starting point.
 
 Working name: **ThruBound** (provisional; see the name check in `COMPETITIVE_ANALYSIS.md` §4).

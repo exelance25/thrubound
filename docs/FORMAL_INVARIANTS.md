@@ -14,7 +14,7 @@ Nine properties, each with its assumptions and the **kind** of evidence behind i
 | **Bounded model checking** | `thru/tests/model_check.py` | Every action sequence up to depth 6 (93,536 states) of the compiled program in the LOCAL SIMULATION, with tiny limits. No violation |
 | **Unit, scenario, property, mutation tests** | `thru/tests/*`, `mutation_check.sh` | 77 Python tests (incl. conformance); property campaign 30×300; 19 of 20 mutants caught + 1 equivalent |
 | **Independent verification** | `thru/verifier/verify_thru.py` | Re-derives the rules from raw events and account bytes (37 traces) |
-| **On-chain verification** | — | **None** (network BLOCKED) |
+| **On-chain test (alphanet)** | `.github/workflows/alphanet-e2e.yml`, `thru/network/alphanet-e2e.mjs` | 42/42 live checks on 2026-11-01 (`m2/thrubound-alphanet/`). Properties 1, 3, 4 and 6, the refusal paths, and the KSI-1 probes were exercised on the real VM and token program. These are examples on a real network, not a proof |
 
 ## 2. Assumptions
 
@@ -24,7 +24,7 @@ Nine properties, each with its assumptions and the **kind** of evidence behind i
 | H2 | Transactions touching the same writable accounts take effect one after another | Not documented in the passages read; **unverified** |
 | H3 | Block time never decreases | **Unverified** |
 | H4 | Only the owning program writes its accounts; only it can authorise its PDAs | Official docs (Programs, invoke auth) and SDK |
-| H5 | The token program's `transfer` moves exactly `amount` or fails; only the account authority can transfer, burn or close | Official docs for burn and freeze; transfer authority **inferred** (KSI-1) |
+| H5 | The token program's `transfer` moves exactly `amount` or fails; only the account authority can transfer, burn or close | Official docs for burn and freeze. **Alphanet probes (2026-11-01):** transfer, burn, close and freeze by non-authorities were refused, and the exact amounts arrived (5, 9, 100). Still not proven for every path (source not public) |
 | H6 | The C code implements the model | **Tested** (conformance, mutation), not proved |
 
 ## 3. The model

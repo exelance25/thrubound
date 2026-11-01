@@ -45,6 +45,10 @@ for p in d.rglob("*.md"):
     s = p.read_text(encoding="utf-8"); t = re.sub(r"C:\\Users\\(?!<user>)[A-Za-z0-9._-]+\\", lambda m: "C:\\Users\\<user>\\", s)
     t = re.sub(r"\| GitHub account `exelance25` \(inferred from[^|]*\| [^|]*?none for this project;", "| The owner's GitHub account | no repository for this project;", t)
     if t != s: p.write_text(t, encoding="utf-8")
+# The public repo holds only ThruBound: drop the legacy licensing map and its mention in NOTICE.
+(d / "LICENSING.md").unlink(missing_ok=True)
+n = d / "NOTICE"
+n.write_text(n.read_text().replace("Where this repository also contains the legacy AgentVault EVM project, those\nfiles keep their own MIT license; see LICENSING.md for the path-by-path map.\n", ""))
 nc = d / "m2/thrubound-phase7/net-cloud.txt"
 if nc.exists():
     s = nc.read_text(); head, _, js = s.partition("## proxy status endpoint\n")

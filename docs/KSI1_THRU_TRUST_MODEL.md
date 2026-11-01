@@ -60,4 +60,10 @@ ThruBound's fund-protection claim holds **only under these assumptions**:
 3. Confirm the token program address on that network.
 4. Deploy ThruBound finalized (immutable), or document its upgrade authority.
 
-All four need a reachable Thru network (**BLOCKED**).
+**Result on the alphanet (2026-11-01, `m2/thrubound-alphanet/`):**
+1. **PASS for the paths tried.** Direct `transfer` signed by the owner and by the agent, `burn` by the owner and with the vault named as an unsigned authority, and `close_account` were all refused by the real token program. The vault balance stayed unchanged. Not every possible attacker and path has been tried.
+2. **PASS.** `freeze_account` on the vault account (mint without a freeze authority) was refused.
+3. **PASS.** The token program address used (`taTOKENKR…`) is the one the real transfers went through.
+4. **OPEN.** The test deployments are not finalized. A production deployment must be finalized or disclose its authority.
+
+KSI-1 therefore stays **open, with alphanet evidence**: the token program source is not public, and Thru can upgrade it.

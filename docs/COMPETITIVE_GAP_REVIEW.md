@@ -1,5 +1,7 @@
 # ThruBound — competitive gap review (Phase 5 gate, 2026-10-30)
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 Builds on `COMPETITIVE_ANALYSIS.md` (products, Thru core programs, sources) and `PRODUCT_DIFFERENTIATION.md` (gaps G-1 to G-6, decision D-12). No novelty is claimed for any single feature. Every statement about another product cites its source; anything not documented there is marked "not documented".
 
 ## Additional products reviewed in this round

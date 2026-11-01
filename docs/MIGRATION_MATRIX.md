@@ -1,5 +1,7 @@
 # Flowstate → ThruBound — migration matrix (2026-10-30)
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 Legend:
 
 | Label | Meaning |

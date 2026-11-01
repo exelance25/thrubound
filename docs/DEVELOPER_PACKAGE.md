@@ -98,7 +98,7 @@ It uploads `alphanet-evidence.json` (public data only). To run it locally on Lin
 ## 7. What this package does not give you
 
 - **No Thru network transport.** The SDK can only talk to the local simulation, and every receipt says `environment: "local-simulation"`.
-- **No execution on a real Thru VM.** The ThruVM binary can be rebuilt reproducibly with the official toolchain (`thru/scripts/build_official.sh`, which needs the official toolchain v0.4.2 and C SDK). That is compilation only.
+- **No local Thru VM.** The local checks run the program's C code in a simulation. Real execution on a Thru VM happens only in the alphanet workflow (§6), which builds with the official toolchain and deploys to the alphanet.
 - **No npm package.** `@thrubound/sdk` is used through a `file:` dependency.
 
 ## 8. Feedback we would like from you

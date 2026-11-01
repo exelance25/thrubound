@@ -2,12 +2,12 @@
 
 Status words: **PASS · FAIL · BLOCKED · NOT RUN · NOT REVIEWED**. Branch `feature/thru-native-migration`. The legacy EVM implementation is unchanged on its own branches (`mvp-app`, `m2.0-m2.1`, `m1.1`, `master`).
 
-> **What has run, and where.** The program below compiles for Thru's RISC-V target (compile only). Its logic has been executed **only on the host, inside a LOCAL SIMULATION** of the Thru runtime surface. It has **not** run on a Thru VM or on any Thru network. Network access to Thru is BLOCKED from both environments available to this project (see `THRU_MIGRATION_DECISIONS.md` §1).
+> **What has run, and where (updated 2026-11-01).** The program compiles with the official Thru toolchain. Its logic runs in the local simulation for the large test suites, and it has run on the Thru **alphanet** VM in the `alphanet-e2e` workflow (42/42 live checks; `m2/thrubound-alphanet/`). Mainnet: never.
 
 ## 1. Components
 
 ```
-                ┌──────────────────────────────── Thru L1 (BLOCKED: not reached) ───────────────────────────┐
+                ┌──────────────────────────────── Thru L1 (alphanet: reached 2026-11-01) ───────────────────────────┐
  owner wallet ──┤ tx (fee payer = owner) ─┐                                                                  │
                 │                         ▼                                                                  │
  AI agent key ──┤ tx (fee payer = agent) ─► Flowstate program (C, RV64) ──tsys_invoke(transfer)──► Token program

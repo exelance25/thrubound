@@ -32,7 +32,7 @@ Everything here was produced in a **LOCAL SIMULATION** or by static tools. **Not
 | Model ↔ C conformance | **20,000 trials, 0 disagreements** | `conformance-20000.txt` |
 | SMT proofs on the abstract model | **92/92 obligations as expected** | `smt-proofs.txt`; script `thru/proof/inductive_smt.py` sha256 `ff34b3f10bb812c01911742f6c32c20708bfd103fe76855dbd9ce46a9a35b788` |
 
-**Status of everything above: PASS in LOCAL SIMULATION.** The RISC-V binary has never executed on a Thru VM.
+**Status of everything above: PASS in LOCAL SIMULATION** (as of 2026-10-31). *Update 2026-11-01: the program has since run on the Thru alphanet, 42/42; see `m2/thrubound-alphanet/`.*
 
 ## 3. What 92/92 means, and what it does not
 

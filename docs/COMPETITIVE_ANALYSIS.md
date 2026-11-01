@@ -1,5 +1,7 @@
 # ThruBound — competitive analysis (2026-10-30)
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 Status words: **PASS · FAIL · BLOCKED · NOT RUN · NOT FOUND**. Every statement below comes from the source linked in its row. "Not documented" means the source does not say; it does not mean the feature is absent. Nothing here was installed or run, except where a row says so.
 
 **Main finding.** Spending limits, allowlists, approval thresholds, expiry and on-chain enforcement for AI agents already exist in several products, including one live on a mainnet (Bursar on Robinhood Chain). On Thru specifically, the core **Rate Limiter** program already acts as a reusable, native policy gate in front of any target program. ThruBound therefore must **not** claim to be the first reusable Thru policy layer (see `PRODUCT_DIFFERENTIATION.md`).

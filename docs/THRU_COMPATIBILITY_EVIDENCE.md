@@ -1,4 +1,6 @@
-# ThruBound — Thru compatibility evidence (2026-10-30)
+# ThruBound — Thru compatibility evidence (2026-10-30, updated 2026-11-01)
+
+> **Update 2026-11-01.** The program has now run on the Thru **alphanet**: official-toolchain build byte-identical on GitHub, deploy, 42/42 live checks (`m2/thrubound-alphanet/EVIDENCE.md`). The rows marked BLOCKED below are historical; see the update column in `docs/STATUS.md`. It is still **not** called production-ready.
 
 **Bottom line.** The program compiles with the **official Thru toolchain and official C SDK (v0.4.2)**. The build is reproducible. The **official `thru` CLI's local program-image validation** accepts the binary. The program has **never been executed on a Thru VM or network**, so it is **not** called "Thru-compatible" or "production-ready" here. Execution is the missing evidence.
 
@@ -29,9 +31,9 @@ The toolchain needs glibc ≥ 2.38, so it runs in the cloud workspace (Ubuntu 24
 | Serialization | packed little-endian structs; official ABI YAMLs | instruction and account layouts are our own (`THRU_ACCOUNT_MODEL.md`); token structs follow the official token ABI | **NOT VERIFIED** on chain |
 | Account access rules | SDK source (`tn_sdk.c`): writable = fee payer or the read-write range; authorized = fee payer, current program, or a parent's invoke auth list | implemented against the SDK API; tested only in the LOCAL SIMULATION, which re-implements these rules | **SIMULATED** |
 | Transaction rollback | `tsdk_revert` aborts the transaction | relied on; modelled in the simulation with full snapshot rollback | **SIMULATED** |
-| Compute and memory limits | runtime-defined | unknown for this program | **NOT RUN** |
-| Execution on ThruVM | — | none | **BLOCKED**: no VM in the release; network unreachable |
-| Deployment | — | none | **BLOCKED** |
+| Compute and memory limits | runtime-defined | alphanet: ThruBound calls run within compute 600,000 and memory 10,000 | **PASS on alphanet** (not profiled) |
+| Execution on ThruVM | — | alphanet, 2026-11-01 | **PASS** (42/42; `m2/thrubound-alphanet/`) |
+| Deployment | — | official `@thru/programs/deploy` workflow, alphanet | **PASS** (test deployment, not finalized) |
 
 ## 3. Fallback-compiler binary
 

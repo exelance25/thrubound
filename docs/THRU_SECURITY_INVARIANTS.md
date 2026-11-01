@@ -1,5 +1,7 @@
 # Flowstate on Thru — security invariants
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 Status words: **PASS · FAIL · BLOCKED · NOT RUN · NOT REVIEWED**. **No security audit and no formal verification have been done.** "PASS" below means the tests listed passed against the LOCAL SIMULATION (real program code, modelled Thru runtime and token program). Nothing here has been observed on a Thru VM or network.
 
 Every invariant is enforced **inside the on-chain program** (`flowstate_core.c` / `flowstate.c`), not in a client, app or backend.

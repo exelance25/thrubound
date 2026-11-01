@@ -1,5 +1,7 @@
 # ThruBound — invariant proof review (2026-10-30)
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 This document states the spending invariants, gives a **hand-written inductive argument** for each, lists its **assumptions**, and maps each claim to the evidence that supports it.
 
 **No formal verification has been done.** The arguments below are written by hand and have not been machine-checked. Historical Flowstate (EVM) results are not used here; they stay labelled historical in `THRU_MIGRATION_BASELINE.md`.

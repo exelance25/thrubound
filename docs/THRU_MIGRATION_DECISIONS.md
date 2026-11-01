@@ -1,5 +1,7 @@
 # Flowstate on Thru — engineering decisions and PHASE 1 compatibility record
 
+> **Update 2026-11-01:** the program has since run on the Thru **alphanet** (official-toolchain build, deploy, 42/42 live checks; `m2/thrubound-alphanet/EVIDENCE.md`). Statements below that say "BLOCKED", "not run on a network" or "local simulation only" describe the state on the date of this document.
+
 Status words: **PASS · FAIL · BLOCKED · NOT RUN · NOT REVIEWED**. "Source-documented" means read from official Thru sources (the `Unto-Labs/thru` repository at `a058dd8` = release v0.4.2, and npm packages 0.4.2). It never means "verified on chain".
 
 ## 1. PHASE 1 compatibility results (2026-10-30)
