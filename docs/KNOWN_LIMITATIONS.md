@@ -3,7 +3,7 @@
 | # | Limitation | Effect | Way out |
 |---|---|---|---|
 | L-1 | Thru network unreachable from both available environments | no deployment, faucet, wallet, real transactions or indexer; acceptance criteria 6, 12, 13 unmet | an environment that can reach `*.thru.org` |
-| L-2 | No Thru VM available locally | the RISC-V binary has never been executed; compute limits, syscall error codes and account-proof handling are untested | run on a Thru network or a released VM |
+| L-2 | ~~No Thru VM~~ **ran on the alphanet VM 2026-11-01 (42/42)**; still no local VM | the RISC-V binary has never been executed; compute limits, syscall error codes and account-proof handling are untested | run on a Thru network or a released VM |
 | L-3 | Token program source not public | `transfer` is tested against a model; `burn`, `close_account`, `freeze_account` authority rules known only from the official CLI help (KSI-1 stays OPEN) | test against the real token program on testnet |
 | L-4 | ~~Toolchain deviation~~ **resolved 2026-10-30**: built with the official toolchain v0.4.2 (gcc 15.2.0) and release SDK, reproducible (`THRU_COMPATIBILITY_EVIDENCE.md`) | the official toolchain needs glibc ≥ 2.38 and was obtained through the linked computer's GitHub access | `thru/scripts/build_official.sh` |
 | L-5 | Token program address taken from the SDK header | may differ per network ("freshly bootstrapped networks") | confirm with `thru program status` / the network; override with `-DFS_TOKEN_PROGRAM_BYTES` |

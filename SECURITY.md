@@ -3,8 +3,7 @@
 ## Status
 
 ThruBound is an **unaudited research prototype**.
-- It has **never been deployed** or executed on any Thru network.
-- It has been tested only in a local simulation.
+- It has been tested in a local simulation and, on 2026-11-01, on the Thru **alphanet** test network (42/42 live checks; `m2/thrubound-alphanet/`). It is not deployed for real use and not on mainnet.
 - **Do not use it with real funds.** There is no supported production version and no bug bounty.
 
 ## Reporting a vulnerability
@@ -22,7 +21,7 @@ We will acknowledge reports as soon as we can and credit reporters who want cred
 
 | ID | Issue |
 |---|---|
-| KSI-1 | Limits hold only if the token program lets nothing but the vault's program-derived authority move, burn or close the vault's token account. Not confirmed on chain |
+| KSI-1 | Limits hold only if the token program lets nothing but the vault's program-derived authority move, burn or close the vault's token account. Alphanet probes (direct transfer, burn, close, freeze) were all refused; not proven for every path |
 | H2 | Assumes transactions on the same writable accounts take effect serially. Unverified |
 | H3 | Assumes block time never decreases. Unverified |
 | Upgrade authority | A deployed, non-finalized program could have its rules replaced |

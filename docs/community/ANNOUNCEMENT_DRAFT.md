@@ -29,7 +29,7 @@ Revoking an agent also kills its pending requests. All checks are in the program
 **Where it actually stands — please read this part:**
 - Built in C against the official C SDK v0.4.2. It compiles reproducibly with the official toolchain (gcc 15.2.0), and the official program-image validator accepts it.
 - An internal review against the official C-program rules caught one critical bug before release (accounts were resized before being made writable, which the VM rejects); the simulation now enforces that rule.
-- **It has never run on a Thru VM or any network.** My dev environments couldn't reach the RPC endpoints, so everything is tested in a local simulation: the same C code compiled for x86-64 against a model of the runtime and token program.
+- **It runs on the alphanet.** A public GitHub Actions run builds it with the official toolchain (byte-identical binary) and deploys it. It passes 42/42 live checks with throw-away test keys and test tokens: payments, limits, approvals, replay, revocation, withdraw, and direct token-program attacks on the vault. The heavier suites below run in a local simulation.
 - Results:
   - 77 tests;
   - bounded model check to depth 6;
@@ -38,7 +38,7 @@ Revoking an agent also kills its pending requests. All checks are in the program
   - z3 proofs of 9 safety properties on an abstract model, linked to the C code by 20,000 conformance trials.
   
   That last item is **not** a proof of the C code, and none of it is an audit.
-- The biggest open question is the token program itself. My limits only hold if nothing but the account authority (the vault PDA) can transfer, burn or close the vault's token account. Docs and CLI help suggest that, but I haven't confirmed it on chain.
+- The biggest open question is the token program itself. My limits only hold if nothing but the account authority (the vault PDA) can transfer, burn or close the vault's token account. On the alphanet, the real token program refused direct transfer, burn, close and freeze of the vault account by the owner and agent keys. I'd still love a second pair of eyes, since the token program source isn't public.
 
 **What I'd love help with:**
 1. Is there any token-program path (delegation, close, burn, freeze, a feature I missed) that can move a PDA-owned token account without the PDA signing?

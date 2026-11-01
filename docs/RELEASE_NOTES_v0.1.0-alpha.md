@@ -4,11 +4,10 @@
 
 ## ⚠️ Read this first
 
-- **Only the local simulation has been verified.** The program's C code is compiled for x86-64 and run against a local model of the Thru runtime and token program. Every test result in this release comes from that simulation or from static tools.
-- **It has not been run on any Thru network.** Nothing has been deployed and no transaction has been sent. The ThruVM binary builds reproducibly with the official toolchain v0.4.2 (sha256 `e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6`), and the official image validator accepts it. That is compilation, not execution.
+- **Tested on the Thru alphanet (test network), not mainnet.** On 2026-11-01 a public GitHub Actions run built the program with the official toolchain v0.4.2. The binary was byte-identical to sha256 `e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6`. The run deployed it to the alphanet and passed **42/42 checks** with real transactions, throw-away test keys and test tokens (`m2/thrubound-alphanet/EVIDENCE.md`). The large test suites (77 tests, model check, mutation, SMT) still run in the local simulation.
 - **Internal security review (not an audit):** one critical functional bug was found and fixed before release. Accounts were resized before being made writable, which a real Thru VM rejects; the simulation now enforces the official rule. See `docs/SECURITY_REVIEW.md`.
 - **Open security questions:**
-  - **KSI-1:** can anything other than the vault's program-derived authority move, burn or close the vault's token account? Not confirmed on chain.
+  - **KSI-1:** on the alphanet, the real token program refused direct transfer, burn, close and freeze of the vault's token account by the owner and agent keys. It is still not proven for every path: the token program source is not public and it can be upgraded.
   - **H2:** are transactions on the same writable accounts applied serially? Unverified.
   - **H3:** does block time never decrease? Unverified.
   - **Upgrade authority:** a deployed program must be finalized, or its upgrade authority disclosed. Not yet determined.

@@ -1,5 +1,13 @@
 # Flowstate on Thru — status (2026-10-30)
 
+## ThruBound — ALPHANET LIVE TEST (2026-11-01)
+
+- **42/42 checks PASS on the real Thru alphanet**, run in public GitHub Actions (`exelance25/thrubound`, run 41294408870). The official-toolchain binary was byte-identical on GitHub (`e0843ea2…`).
+- **Program:** deployed at `taSNdMRdDn4VhJzVwTmD7XQeA9rWEv6UPl9tPa5vrCHLGQ`; the official explorer shows 27,616 bytes, flagged Program.
+- **Flows:** vault, mint check, agent, recipient, instant payment, pending → approve, and refusals: PER_TX, RECIPIENT_NOT_ALLOWED, BAD_NONCE, NOT_AGENT, APPROVAL_MISMATCH, NO_PENDING, UNKNOWN_AGENT after revoke. Withdraw succeeded. Final balances 886 / 14 / 100.
+- **KSI-1:** the real token program refused direct transfer, burn, close and freeze of the vault account.
+- **Evidence:** `m2/thrubound-alphanet/EVIDENCE.md`. Test keys were throw-away and never saved; only faucet and test tokens were used. Not mainnet. Not an audit.
+
 ## ThruBound — security review and alphanet preparation (2026-10-31, branch `feature/thrubound`)
 
 - **Internal security review (not an audit):** `docs/SECURITY_REVIEW.md`.

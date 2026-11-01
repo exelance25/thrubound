@@ -4,7 +4,7 @@ All notable changes to ThruBound. The detailed engineering log is in `docs/CHANG
 
 ## [v0.1.0-alpha] — unreleased (prepared 2026-10-31)
 
-First public preview. **Local simulation only. Not deployed on any Thru network. Not for production use.**
+First public preview. **Tested on the Thru alphanet (42/42 live checks, 2026-11-01); not on mainnet. Not for production use.**
 
 ### Fixed before release (internal security review, `docs/SECURITY_REVIEW.md`)
 - **Critical (functional):** accounts were resized before being made writable. The official rule requires writable first, so a real Thru VM would have rejected every account creation. The simulation now enforces the rule.
@@ -33,8 +33,12 @@ First public preview. **Local simulation only. Not deployed on any Thru network.
   - a model ↔ C conformance test.
 - **Developer tooling:** the one-command runner `thru/run_all_tests.sh`, with its expected output; GitHub Actions `ci` (local checks) and `alphanet-e2e` (manual: official toolchain build, then a live test on the Thru alphanet with throw-away test keys).
 
+### Verified on the alphanet (2026-11-01)
+- The official-toolchain build is byte-identical on GitHub. Deploy succeeded, plus 42/42 live checks, including KSI-1 probes against the real token program (`m2/thrubound-alphanet/`).
+- The test fixed its own client mistakes on the way: state units for account creation, explicit resource limits, the original (not the derived) seed for token instructions, and fee-payer nonce tracking. These are documented in `thru/network/harness.mjs`. **The ThruBound program needed no change on the network.**
+
 ### Known open issues
-- KSI-1 (token-program authority paths), H2 (serial effect), H3 (monotonic time) and the upgrade authority are open.
+- KSI-1 is backed by alphanet probes but not proven (the token program source is not public). H2 (serial effect), H3 (monotonic time) and the production upgrade authority are open.
 - No network transport and no Passkey Manager approval. The Rate Limiter analysis targets the v0.4.2 ABI; the Rate Limiter was removed from the official SDKs in v0.4.3.
 - No audit.
 

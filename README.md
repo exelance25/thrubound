@@ -4,9 +4,9 @@
 
 ThruBound is a research prototype of a Thru-native program and TypeScript SDK. It lets an owner give an AI agent (or any automated key) a **bounded token allowance** instead of wallet access.
 
-> **Status: v0.1.0-alpha research prototype, LOCAL SIMULATION only. Not ready for production.**
-> - Not deployed on any Thru network. No transaction has ever been sent.
-> - The program compiles reproducibly with the official Thru toolchain v0.4.2, but **has never executed on a Thru VM**.
+> **Status: v0.1.0-alpha research prototype. Not ready for production.**
+> - **Tested on the Thru alphanet (test network) on 2026-11-01: 42/42 checks passed** with real transactions, throw-away test keys and test tokens (`m2/thrubound-alphanet/EVIDENCE.md`). Not on mainnet.
+> - The program compiles reproducibly with the official Thru toolchain v0.4.2.
 > - Not audited. Not formally verified.
 > - Do not use with real funds.
 
@@ -58,11 +58,11 @@ Full lists: [`docs/KNOWN_LIMITATIONS.md`](docs/KNOWN_LIMITATIONS.md), [`docs/THR
 | Official toolchain v0.4.2 build | reproducible binary, sha256 `e0843ea2…27a6`; accepted by the official image validator (`validateManagerProgramImage`, `@thru/programs` 0.4.3); earlier builds also passed the official CLI's image check | that it runs correctly on a Thru VM |
 | Local simulation: the same C program compiled for x86-64 inside a model of the Thru runtime and token program | 77 Python tests, 12 SDK tests, verifier 37/37, model check depth 6 (93,536 states), 19 of 20 mutants caught + 1 equivalent | real network behaviour; the token program is a **model** |
 | SMT (z3) on an **abstract model** | 92/92 obligations, 9 properties (no overspend, no replay, revoke and expiry hold, exact approval binding, failure consistency) | a proof of the C code. The model↔C link is **testing** (20,000 conformance trials, 0 disagreements) |
-| Thru network | **none.** Read-only health checks only (Phase 7) | — |
+| **Thru alphanet (real test network)** | **42/42 checks PASS**: the official binary was deployed. Live on chain: vault, agent, payments, limits, nonce replay, approval binding, revocation and withdraw. KSI-1 probes: direct transfer, burn, close and freeze of the vault's token account by the owner or agent key are all refused by the real token program | mainnet; H2/H3; every possible token-program path (the token program source is not public) |
 
 An internal security review (not an audit) found and fixed one critical functional bug: accounts were resized before being made writable, which a real Thru VM rejects. See [`docs/SECURITY_REVIEW.md`](docs/SECURITY_REVIEW.md).
 
-**Test results are not network verification.** Details and assumptions: [`docs/FORMAL_INVARIANTS.md`](docs/FORMAL_INVARIANTS.md) and [`m2/thrubound-phase7/EVIDENCE_MANIFEST.md`](m2/thrubound-phase7/EVIDENCE_MANIFEST.md).
+**Local test results are not network verification; the alphanet run is.** Details and assumptions: [`docs/FORMAL_INVARIANTS.md`](docs/FORMAL_INVARIANTS.md) and [`m2/thrubound-phase7/EVIDENCE_MANIFEST.md`](m2/thrubound-phase7/EVIDENCE_MANIFEST.md).
 
 ## Try it (Linux or WSL2; Windows native unsupported)
 

@@ -27,9 +27,9 @@ step() {   # step "<name>" "<success regex in output>" command...
 
 step "host build (real program code + simulated Thru runtime)" "built " bash build_host.sh
 step "Python: functional, adversarial, property, scenarios, model conformance" "^OK" \
-  bash -c "cd tests && python3 -m unittest test_functional test_adversarial test_properties test_scenarios test_model_conformance 2>&1 | tail -3"
+  bash -c "cd tests && python3 -m unittest test_functional test_adversarial test_properties test_scenarios test_model_conformance 2>&1 | grep -E '^(Ran |OK|FAILED)'"
 step "independent verifier over all traces" "^PASS" python3 verifier/verify_thru.py
-step "verifier tamper tests" "^OK" bash -c "cd verifier && python3 -m unittest test_verifier 2>&1 | tail -3"
+step "verifier tamper tests" "^OK" bash -c "cd verifier && python3 -m unittest test_verifier 2>&1 | grep -E '^(Ran |OK|FAILED)'"
 step "bounded model check (depth 5)" "^PASS" bash -c "cd tests && python3 model_check.py 5 | grep -E '^(PASS|VIOLATION)'"
 if python3 -c "import z3" 2>/dev/null; then
   step "SMT proofs of the abstract model (z3)" "^PASS" bash -c "python3 proof/inductive_smt.py | tail -1"

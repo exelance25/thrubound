@@ -51,7 +51,7 @@
 | H1 failed transactions are atomic | official docs |
 | H2 transactions on the same writable accounts take effect serially | **not documented** in the official docs (searched 2026-10-31); unverified |
 | H3 block time never decreases | **not documented**; unverified (`block_time` units now verified as Unix ns) |
-| H5 / KSI-1 only the account authority can move, burn or close a token account | ABI and CLI help support it; **on-chain probes written** (`thru/network/alphanet-e2e.mjs`), run pending network access |
+| H5 / KSI-1 only the account authority can move, burn or close a token account | **Alphanet, 2026-11-01:** the real token program refused six direct probes on the vault's token account: transfer by the owner, transfer by the agent, burn by the owner, burn with the vault named as an unsigned authority, close, and freeze. The vault balance was unchanged (`m2/thrubound-alphanet/`). Still not a proof: the token program source is not public and Thru can upgrade it |
 | H6 C code implements the model | tested (conformance, 20 mutants), not proved |
 
 ## Evidence after the fixes

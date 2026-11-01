@@ -55,7 +55,7 @@ PY
   fi
   # full campaign (30 seeds): a reduced campaign can fail its coverage gates, which is NOT a detection
   log=$(cd tests && FS_SIM_LIB="$TMP/lib.so" timeout 900 python3 -m unittest test_functional test_adversarial test_properties test_scenarios test_model_conformance 2>&1)
-  out=$(echo "$log" | tail -1)
+  out=$(echo "$log" | grep -E '^(OK|FAILED)' | tail -1)   # unittest verdict line (summary prints may follow it)
   only_cov=$(echo "$log" | grep -c "AssertionError: {.*} != {}")
   if echo "$out" | grep -q "^OK"; then
     if [ -n "${EQUIV[$name]:-}" ]; then echo "$name: EQUIVALENT (not counted) - ${EQUIV[$name]}"; else echo "$name: MISSED ($out)"; fail=1; fi
