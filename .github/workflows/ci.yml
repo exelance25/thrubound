@@ -19,7 +19,10 @@ jobs:
         run: bash thru/run_all_tests.sh
       - name: Show failures
         if: failure()
-        run: grep -n -B2 -A25 -E "^(FAIL|ERROR):|Traceback|^===== .*exit [1-9]" thru/build/run_all_tests.log | head -300 || true
+        run: |
+          grep -n -B2 -A25 -E "^(FAIL|ERROR):|Traceback" thru/build/run_all_tests.log | head -200 || true
+          sed -n "/^===== Python/,/^===== /p" thru/build/run_all_tests.log | head -40
+          cd thru/tests && python3 --version && python3 -m unittest test_functional test_adversarial test_properties test_scenarios test_model_conformance 2>&1 | tail -40
       - name: Keep the full log
         if: always()
         uses: actions/upload-artifact@v4
