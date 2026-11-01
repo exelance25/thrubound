@@ -48,7 +48,8 @@ function summarize(label, signature, u) {
 }
 
 export async function createEoa(name) {
-  const tx = await thru.accounts.create({ publicKey: K[name].publicKey });
+  // Fee-payer activation needs one state unit (runtime error -497 otherwise; official wallet code uses stateUnits: 1).
+  const tx = await thru.accounts.create({ publicKey: K[name].publicKey, header: { stateUnits: 1 } });
   const sig = await tx.sign(K[name].privateKey);
   const u = await track(tx.toWire());
   return summarize(`create EOA ${name}`, sig, u);
@@ -89,7 +90,7 @@ export async function createMint(authorityName, seedLabel = "thrubound-test") {
   const proof = await creatingProof(m.address);
   const r = await send("token initialize_mint (no freeze authority)", authorityName, TOKEN, [m.address], [],
     token.createInitializeMintInstruction({ mintAccountBytes: m.bytes, decimals: 0, mintAuthorityBytes: decodeAddress(A[authorityName]),
-      ticker: "TBTEST", seedHex: hex(m.derivedSeed), stateProof: proof.proof }), { startSlot: proof.slot });
+      ticker: "TBTEST", seedHex: hex(m.derivedSeed), stateProof: proof.proof }), { startSlot: proof.slot, stateUnits: 1 });
   return { ...r, mint: m.address };
 }
 export async function createTokenAccount(payer, ownerAddr, label) {
@@ -98,7 +99,7 @@ export async function createTokenAccount(payer, ownerAddr, label) {
   const proof = await creatingProof(t.address);
   const r = await send(`token initialize_account ${label}`, payer, TOKEN, [t.address], [A.mint, ownerAddr].filter((x) => x !== A[payer]),
     token.createInitializeAccountInstruction({ tokenAccountBytes: t.bytes, mintAccountBytes: decodeAddress(A.mint),
-      ownerAccountBytes: decodeAddress(ownerAddr), seedBytes: t.derivedSeed, stateProof: proof.proof }), { startSlot: proof.slot });
+      ownerAccountBytes: decodeAddress(ownerAddr), seedBytes: t.derivedSeed, stateProof: proof.proof }), { startSlot: proof.slot, stateUnits: 1 });
   return { ...r, tokenAccount: t.address };
 }
 export async function mintTo(authorityName, destLabel, amount) {
@@ -164,7 +165,7 @@ export const tb = {
     const proof = await creatingProof(A.vault);
     return send("ThruBound INIT_VAULT", "owner", A.program, [A.vault], [], async (ctx) => { const i = I(ctx);
       return withProof(new W().u8(0).u16(i("vault")).u16(i("owner")).key(decodeAddress(A.mint)).u64(vaultId).u64(ttlNs), proof.proof); },
-      { startSlot: proof.slot });
+      { startSlot: proof.slot, stateUnits: 1 });
   },
   bindToken(withMint = true) {
     return send("ThruBound BIND_TOKEN (+ mint unfreezable check)", "owner", A.program, [A.vault], [A.vaultToken, A.mint], async (ctx) => { const i = I(ctx);
@@ -175,7 +176,7 @@ export const tb = {
     return send(`ThruBound SET_AGENT (${create ? "create" : "update"})`, "owner", A.program, [A.agentAcct, A.vault], [], async (ctx) => { const i = I(ctx);
       return withProof(new W().u8(2).u16(i("vault")).u16(i("owner")).u16(i("agentAcct")).key(decodeAddress(A.agent))
         .u64(l.perTx).u64(l.daily).u64(l.budget).u64(l.threshold).u64(l.validUntilNs).u8(create ? 1 : 0), proof?.proof); },
-      proof ? { startSlot: proof.slot } : undefined);
+      proof ? { startSlot: proof.slot, stateUnits: 1 } : undefined);
   },
   setRecipient(recipientLabel, allowed = true) {
     return send(`ThruBound SET_RECIPIENT ${recipientLabel}`, "owner", A.program, [A.agentAcct], [A.vault], async (ctx) => { const i = I(ctx);
@@ -188,7 +189,7 @@ export const tb = {
     return send(label, signer, A.program, rw, [TOKEN], async (ctx) => { const i = I(ctx);
       return withProof(new W().u8(5).u16(i("vault")).u16(i("agentAcct")).u16(i(signer)).u16(req ? i(req) : 0xffff)
         .u16(i("vaultToken")).u16(i(recipientLabel)).u16(i(TOKEN)).u64(nonce).u64(amount), proof?.proof); },
-      proof ? { startSlot: proof.slot } : undefined);
+      proof ? { startSlot: proof.slot, stateUnits: 1 } : undefined);
   },
   async approve(label, nonce, tamper = {}) {
     const r = await thru.accounts.get(A[`req${nonce}`]);
