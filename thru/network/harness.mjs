@@ -97,16 +97,17 @@ export async function createMint(authorityName, seedLabel = "thrubound-test") {
   const proof = await creatingProof(m.address);
   const r = await send("token initialize_mint (no freeze authority)", authorityName, TOKEN, [m.address], [],
     token.createInitializeMintInstruction({ mintAccountBytes: m.bytes, decimals: 0, mintAuthorityBytes: decodeAddress(A[authorityName]),
-      ticker: "TBTEST", seedHex: hex(m.derivedSeed), stateProof: proof.proof }), { startSlot: proof.slot, stateUnits: 1 });
+      ticker: "TBTEST", seedHex, stateProof: proof.proof }), { startSlot: proof.slot, stateUnits: 1 });
   return { ...r, mint: m.address };
 }
 export async function createTokenAccount(payer, ownerAddr, label) {
-  const t = token.deriveTokenAccountAddress(thru, ownerAddr, A.mint, TOKEN);
+  const seed = new Uint8Array(32);   // the instruction takes the ORIGINAL seed (official CLI), not the derived one
+  const t = token.deriveTokenAccountAddress(thru, ownerAddr, A.mint, TOKEN, seed);
   A[label] = t.address;
   const proof = await creatingProof(t.address);
   const r = await send(`token initialize_account ${label}`, payer, TOKEN, [t.address], [A.mint, ownerAddr].filter((x) => x !== A[payer]),
     token.createInitializeAccountInstruction({ tokenAccountBytes: t.bytes, mintAccountBytes: decodeAddress(A.mint),
-      ownerAccountBytes: decodeAddress(ownerAddr), seedBytes: t.derivedSeed, stateProof: proof.proof }), { startSlot: proof.slot, stateUnits: 1 });
+      ownerAccountBytes: decodeAddress(ownerAddr), seedBytes: seed, stateProof: proof.proof }), { startSlot: proof.slot, stateUnits: 1 });
   return { ...r, tokenAccount: t.address };
 }
 export async function mintTo(authorityName, destLabel, amount) {
