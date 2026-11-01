@@ -23,13 +23,13 @@ const must = (r) => { step(r); check(r.label + " succeeds", r.ok, `vmError=${r.v
 const refused = (r, code, why) => { step(r); const u = BigInt(r.userErrorCode ?? 0);
   check(`${why} is refused on chain`, !r.ok && (code === undefined || u === BigInt(code)),
     `vmError=${r.vmError} userErrorCode=0x${u.toString(16)}${code !== undefined ? " expected 0x" + code.toString(16) : ""}`); };
-const bal = async (label) => (await H.tokenState(label)).amount;
+const bal = async (label, expect) => BigInt((await H.tokenState(label, expect)).amount);
 
 try {
   E.chain = await H.chain(); E.bootstrap = H.bootstrap(); console.log("chain", E.chain);
   E.actors = await H.newKeys(["owner", "agent", "vendor", "stranger"]);
   for (const n of ["owner", "agent", "vendor", "stranger"]) must(await H.createEoa(n));
-  for (const n of ["owner", "agent"]) {
+  for (const n of ["owner", "agent", "stranger"]) {
     const r = step(await H.faucet(n, 10000n));
     check(`faucet native THRU to ${n}`, r.ok, `vmError=${r.vmError} user=${r.userErrorCode}`);
     E[`${n}Account`] = await H.account(E.actors[n]);
@@ -59,7 +59,7 @@ try {
 
   // agent payments
   must(await H.tb.request("agent pays vendor 5 (instant)", 0n, 5n, "vendorToken"));
-  check("vendor received 5", (await bal("vendorToken")) === 5n);
+  check("vendor received 5", (await bal("vendorToken", 5n)) === 5n);
   refused(await H.tb.request("agent tries 11 (> per-payment 10)", 1n, 11n, "vendorToken"), ERR.PER_TX, "over-limit payment");
   refused(await H.tb.request("agent pays a stranger", 1n, 3n, "strangerToken"), ERR.RECIPIENT_NOT_ALLOWED, "payment to a non-allowlisted recipient");
   refused(await H.tb.request("agent replays nonce 0", 0n, 1n, "vendorToken"), ERR.BAD_NONCE, "replayed nonce");
@@ -67,7 +67,7 @@ try {
   must(await H.tb.request("agent asks 9 (above threshold 5 -> pending)", 1n, 9n, "vendorToken", true));
   refused(await H.tb.approve("owner approves a tampered amount (8)", 1n, { amount: 8n }), ERR.APPROVAL_MISMATCH, "tampered approval");
   must(await H.tb.approve("owner approves exactly the pending request", 1n));
-  check("vendor balance 14 after approval", (await bal("vendorToken")) === 14n);
+  check("vendor balance 14 after approval", (await bal("vendorToken", 14n)) === 14n);
   refused(await H.tb.approve("owner approves the same request again", 1n), ERR.NO_PENDING, "second approval");
 
   // KSI-1: can anything other than ThruBound move the vault's tokens? (official token program, direct calls)
@@ -84,13 +84,13 @@ try {
     (i) => Uint8Array.from([6, ...u16(i(H.addresses()[v])), ...u16(i(H.addresses().mint)), ...u16(0)])), undefined, "KSI-1 freeze of the vault token account");
   refused(await H.tokenRaw("token transfer vault->agent token, agent signs", "agent", [H.addresses()[v], H.addresses().vendorToken], [],
     (i) => Uint8Array.from([2, ...u16(i(H.addresses()[v])), ...u16(i(H.addresses().vendorToken)), ...u64(1n)])), undefined, "KSI-1 direct transfer by the agent key");
-  check("vault balance unchanged by the KSI-1 probes (986)", (await bal(v)) === 986n);
+  check("vault balance unchanged by the KSI-1 probes (986)", (await bal(v, 986n)) === 986n);
 
   // revoke, then payments are refused; owner withdraws
   must(await H.tb.revoke());
   refused(await H.tb.request("revoked agent tries to pay 1", 2n, 1n, "vendorToken"), ERR.UNKNOWN_AGENT, "payment after revocation");
   must(await H.tb.withdraw(100n, "ownerToken"));
-  E.finalBalances = { vault: await bal(v), vendor: await bal("vendorToken"), owner: await bal("ownerToken") };
+  E.finalBalances = { vault: await bal(v, 886n), vendor: await bal("vendorToken", 14n), owner: await bal("ownerToken", 100n) };
   check("final balances vault 886 / vendor 14 / owner 100", E.finalBalances.vault === 886n && E.finalBalances.vendor === 14n && E.finalBalances.owner === 100n,
     JSON.stringify(E.finalBalances, (_, x) => (typeof x === "bigint" ? x.toString() : x)));
 } catch (e) {

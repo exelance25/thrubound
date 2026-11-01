@@ -2,6 +2,7 @@
 // Test keys are generated in the page, live only in this closure, and are never returned, exported or logged.
 // Only test assets are used: native THRU from the official faucet and a test mint created here.
 import { createThruClient } from "@thru/sdk/client";
+import { expectedNonceFromExecutionResult } from "@thru/sdk";
 import { decodeAddress, encodeAddress } from "@thru/sdk/helpers";
 import { StateProofType } from "@thru/sdk/proto";
 import * as boot from "@thru/programs/bootstrap-addresses";
@@ -56,8 +57,30 @@ export async function createEoa(name) {
   return summarize(`create EOA ${name}`, sig, u);
 }
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const NONCE = {};   // signer -> next nonce, tracked locally (the chain view can lag behind our own submissions)
+async function chainNonce(addr) {
+  for (let i = 0; i < 30; i++) { try { const a = await thru.accounts.get(addr); if (a?.meta?.nonce !== undefined) return BigInt(a.meta.nonce); } catch {} await sleep(1000); }
+  throw new Error("account not visible: " + addr);
+}
+/** Retry a read until pred(value) holds (state becomes visible a moment after execution). */
+export async function eventually(read, pred = (x) => x !== undefined && x !== null, tries = 30) {
+  let last; for (let i = 0; i < tries; i++) { try { last = await read(); if (pred(last)) return last; } catch (e) { last = e; } await sleep(1000); }
+  return last;
+}
 /** Build, sign (fee payer = signer) and send one instruction; data(ctx) gets the official account ordering. */
 export async function send(label, signer, program, readWrite, readOnly, data, header) {
+  if (NONCE[signer] === undefined) NONCE[signer] = await chainNonce(A[signer]);
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const r = await sendOnce(label, signer, program, readWrite, readOnly, data, { ...(header ?? {}), nonce: NONCE[signer] });
+    const exp = expectedNonceFromExecutionResult(r.__exec);
+    if (exp !== undefined && (r.vmError === -511 || r.vmError === -510)) { NONCE[signer] = exp; continue; }   // re-sync and retry
+    NONCE[signer] += 1n;               // executed (success or failure) => the fee payer nonce advanced (official: H1)
+    delete r.__exec; LOG.push(json(r)); return json(r);
+  }
+  throw new Error("nonce could not be synchronised for " + signer);
+}
+async function sendOnce(label, signer, program, readWrite, readOnly, data, header) {
   // Official rule: no duplicate accounts. The fee payer is index 0, so drop it (and repeats) from the lists.
   const uniq = (xs, skip) => xs.filter((x, i) => !skip.includes(x) && xs.indexOf(x) === i);
   readWrite = uniq(readWrite, [A[signer]]); readOnly = uniq(readOnly, [A[signer], ...readWrite]);
@@ -69,7 +92,9 @@ export async function send(label, signer, program, readWrite, readOnly, data, he
     header: { computeUnits: 600000, memoryUnits: 10000, stateUnits: 0, ...(header ?? {}) },
   });
   const u = await track(built.rawTransaction);
-  return summarize(label, built.signature, u);
+  const r = u?.executionResult;
+  return { label, signature: sigStr(built.signature), status: u?.status, vmError: r?.vmError, userErrorCode: r?.userErrorCode,
+    computeUnits: r?.consumedComputeUnits, ok: !!r && r.vmError === 0 && (r.userErrorCode ?? 0n) === 0n, __exec: r };
 }
 
 export async function faucet(name, amount = 10000n, fee = 0n) {
@@ -119,11 +144,12 @@ export async function mintTo(authorityName, destLabel, amount) {
 export async function tokenRaw(label, signer, readWrite, readOnly, build) {
   return send(label, signer, TOKEN, readWrite, readOnly, async (ctx) => build((a) => ctx.getAccountIndex(decodeAddress(a))));
 }
-export async function tokenState(label) {
-  const a = await thru.accounts.get(A[label]);
-  return json(token.parseTokenAccountData(a));
+export async function tokenState(label, expectAmount) {
+  const read = async () => json(token.parseTokenAccountData(await thru.accounts.get(A[label])));
+  return expectAmount === undefined ? eventually(read, (x) => x && x.amount !== undefined)
+    : eventually(read, (x) => x && BigInt(x.amount) === BigInt(expectAmount), 20);
 }
-export async function mintState() { return json(token.parseMintAccountData(await thru.accounts.get(A.mint))); }
+export async function mintState() { return eventually(async () => json(token.parseMintAccountData(await thru.accounts.get(A.mint)))); }
 
 // ------------------------------------------------------------------ program deployment
 export async function deploy(signer, programB64, seed) {
@@ -132,6 +158,7 @@ export async function deploy(signer, programB64, seed) {
   const res = await deployProgram({ seed, signer: { address: A[signer], privateKey: K[signer].privateKey }, client: thru,
     program: bytes, onProgress: (e) => events.push(`${e.phase}:${e.status}${e.uploadStep ? ":" + e.uploadStep : ""}${e.signature ? ":" + e.signature : ""}`) });
   A.program = res.programAccountAddress; A.programMeta = res.programMetaAccountAddress;
+  delete NONCE[signer];   // the deploy workflow sent its own transactions; re-read the nonce from chain
   const out = json({ label: "deploy ThruBound program", program: res.programAccountAddress, meta: res.programMetaAccountAddress,
     authority: res.authorityAddress, version: res.programVersion, size: res.programSize, sha256: res.programUpload?.sha256,
     signature: res.transactionSignature, uploadSignatures: res.programUpload?.transactionSignatures, warnings: res.warnings, events });
@@ -200,7 +227,7 @@ export const tb = {
       proof ? { startSlot: proof.slot, stateUnits: 1 } : undefined);
   },
   async approve(label, nonce, tamper = {}) {
-    const r = await thru.accounts.get(A[`req${nonce}`]);
+    const r = await eventually(() => thru.accounts.get(A[`req${nonce}`]), (x) => x?.data?.data?.length === 184);
     const d = r.data.data; const dv = new DataView(d.buffer, d.byteOffset);
     const rec = { vault: d.slice(8, 40), agent: d.slice(40, 72), recipient: d.slice(72, 104), mint: d.slice(104, 136),
       amount: dv.getBigUint64(136, true), nonce: dv.getBigUint64(144, true), expires: dv.getBigUint64(176, true) };
