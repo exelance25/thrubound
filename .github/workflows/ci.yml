@@ -17,6 +17,9 @@ jobs:
         run: pip install --break-system-packages z3-solver==5.3.3.0
       - name: Run every local check
         run: bash thru/run_all_tests.sh
+      - name: Show failures
+        if: failure()
+        run: grep -n -B2 -A25 -E "^(FAIL|ERROR):|Traceback|^===== .*exit [1-9]" thru/build/run_all_tests.log | head -300 || true
       - name: Keep the full log
         if: always()
         uses: actions/upload-artifact@v4
