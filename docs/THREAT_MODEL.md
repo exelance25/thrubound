@@ -41,7 +41,7 @@
 | T12 | Partial failure (transfer fails after accounting) | Atomic transaction | **official docs** (H1); simulated |
 | T13 | Concurrent requests overspend | Reservation at request time; serial effect assumed | simulated; **H2 unverified** |
 | T14 | Midnight double-spend of the daily limit (BF2-2) | Documented; not prevented (calendar day) | documented |
-| T15 | Owner key loss or compromise | Out of scope; recommend the passkey wallet as owner (`invoke` path) | design only |
+| T15 | Owner key loss or compromise | Out of scope; recommend the passkey wallet as owner (the Wallet program's `validate` + target-instruction flow; not built yet) | design only |
 | T16 | Misleading report (the analysis says "safe" while it is not) | Strict classification; anything unreadable is RISK; simulated data is never VERIFIED | tests |
 | T17 | Rate Limiter admin, or a missing selector, drains RL-held funds | Analyzer flags `rl-admin`, `rl-selector` and others | ABI-level; simulated |
 | T18 | Session key of the official wallet used for unlimited actions | Use a ThruBound allowance instead | design argument (official docs: sessions sign any intent) |

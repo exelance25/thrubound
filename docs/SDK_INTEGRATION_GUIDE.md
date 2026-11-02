@@ -109,7 +109,7 @@ These exist on `LocalSimulationTransport` and **not** on a real chain (all argum
 ## 6. Not yet available
 
 - A Thru network transport (signing with `@thru/sdk`, submission, account proofs).
-- Passkey approval through Passkey Manager VALIDATE.
+- Passkey approval through the Wallet program's `validate` + target-instruction flow (official v0.4.3).
 - Rate Limiter composition (decision D-12, deferred).
 
 All three need a reachable Thru network. See `KNOWN_LIMITATIONS.md`.

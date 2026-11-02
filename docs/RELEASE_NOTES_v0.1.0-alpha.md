@@ -49,7 +49,7 @@
 ## Not included / not a replacement
 
 - **Not a generic call gate.** ThruBound only covers token transfers. Thru's Rate Limiter, the earlier generic gate, was removed from the official SDKs in v0.4.3 (2026-10-30).
-- **Not a replacement for Thru's Passkey Manager.** Owner approval through the Passkey Manager is designed but not executed.
+- **Not a wallet.** Owner approval from a passkey wallet, through the Wallet program's `validate` + target-instruction flow (official v0.4.3), is planned but not built.
 - No network transport.
 - No native THRU limits.
 - No shared cap across agents.

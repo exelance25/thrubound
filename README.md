@@ -31,7 +31,7 @@ It also ships an **authority analyzer**. For a vault, a plain token account or a
 ## What it does not do
 
 - **It is not a generic gate for program calls.** It only authorises token-program transfers. (Thru's Rate Limiter covered arbitrary calls; the official v0.4.3 release removed it from the SDKs.)
-- **It is not a wallet.** The owner is any Thru account. Owner approval through the passkey wallet (Passkey Manager `invoke`) is designed but has **not** been executed.
+- **It is not a wallet.** The owner is any Thru account. Owner approval from a passkey wallet, through the Wallet program's `validate` + target-instruction flow (official v0.4.3; the older `invoke` instruction is marked legacy), is planned but has **not** been built or executed.
 - It does not limit **native THRU** (fees or native transfers), only token-program tokens. One token per vault.
 - It does not schedule payments. The agent triggers them.
 - It has no single cap shared by several agents. The shared bound is the vault balance.
@@ -71,7 +71,12 @@ cd examples/subscription-payer && npm start   # the example app (after the line 
 cd thru/demo && npm start                  # demo page on http://127.0.0.1:3100
 ```
 
-On the alphanet: **Actions → alphanet-e2e → Run workflow**. It builds with the official toolchain, deploys, runs the live checks with throw-away test keys and faucet funds, and publishes the results in the job summary.
+On the alphanet:
+- Latest live run (42/42): https://github.com/exelance25/thrubound/actions/runs/41294408870
+- Evidence, every transaction: [`m2/thrubound-alphanet/EVIDENCE.md`](m2/thrubound-alphanet/EVIDENCE.md)
+- Re-run it yourself: https://github.com/exelance25/thrubound/actions/workflows/alphanet-e2e.yml (**Run workflow**).
+
+The workflow builds with the official toolchain, deploys, runs the live checks with throw-away test keys and faucet funds, and publishes the results in the job summary.
 
 Prerequisites, WSL steps and expected output: [`docs/DEVELOPER_PACKAGE.md`](docs/DEVELOPER_PACKAGE.md). SDK usage: [`docs/SDK_INTEGRATION_GUIDE.md`](docs/SDK_INTEGRATION_GUIDE.md).
 

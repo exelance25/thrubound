@@ -24,11 +24,11 @@ Revoking an agent also kills its pending requests. All checks are in the program
 
 **What it is not.**
 - It's not a generic gate for arbitrary program calls. ThruBound only covers token transfers. (The Rate Limiter that used to fill that role was removed from the official SDKs in v0.4.3.)
-- It's not a replacement for the Passkey Manager either. The plan is for owners to approve through its `invoke` path, but I haven't run that yet.
+- It's not a wallet. The plan is for a passkey wallet to be the owner and approve through the Wallet program's `validate` + target-instruction flow (v0.4.3 marks the old `invoke` as legacy). I haven't built that yet.
 
 **Where it actually stands — please read this part:**
 - Built in C against the official C SDK v0.4.2. It compiles reproducibly with the official toolchain (gcc 15.2.0), and the official program-image validator accepts it.
-- An internal review against the official C-program rules caught one critical bug before release (accounts were resized before being made writable, which the VM rejects); the simulation now enforces that rule.
+- An internal review against the official C-program rules caught one critical bug before release (accounts were resized before being made writable, which the official SDK reference says the VM rejects); the simulation now enforces that rule.
 - **It runs on the alphanet.** A public GitHub Actions run builds it with the official toolchain (byte-identical binary) and deploys it. It passes 42/42 live checks with throw-away test keys and test tokens: payments, limits, approvals, replay, revocation, withdraw, and direct token-program attacks on the vault. The heavier suites below run in a local simulation.
 - Results:
   - 77 tests;

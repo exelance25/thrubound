@@ -39,7 +39,7 @@ First public preview. **Tested on the Thru alphanet (42/42 live checks, 2026-11-
 
 ### Known open issues
 - KSI-1 is backed by alphanet probes but not proven (the token program source is not public). H2 (serial effect), H3 (monotonic time) and the production upgrade authority are open.
-- No network transport and no Passkey Manager approval. The Rate Limiter analysis targets the v0.4.2 ABI; the Rate Limiter was removed from the official SDKs in v0.4.3.
+- No SDK network transport and no passkey-wallet approval (planned via the Wallet program's `validate` + target-instruction flow). The Rate Limiter analysis targets the v0.4.2 ABI; the Rate Limiter was removed from the official SDKs in v0.4.3.
 - No audit.
 
 See `docs/RELEASE_NOTES_v0.1.0-alpha.md`.

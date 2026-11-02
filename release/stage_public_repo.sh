@@ -12,7 +12,7 @@ cd "$SRC"
 INCLUDE=(README.md LICENSE NOTICE LICENSING.md CONTRIBUTING.md SECURITY.md CHANGELOG.md .env.example
          thru examples/subscription-payer docs m2/thru-baseline m2/thru-phase1 m2/thru-phase3
          m2/thrubound-ce1 m2/thrubound-p2 m2/thrubound-p3 m2/thrubound-p5 m2/thrubound-p6
-         m2/thrubound-phase6 m2/thrubound-phase7 m2/thrubound-p8 release .github)
+         m2/thrubound-phase6 m2/thrubound-phase7 m2/thrubound-p8 m2/thrubound-alphanet release .github)
 EXCLUDE='^docs/legacy/|^docs/PUBLIC_RELEASE_CHECKLIST\.md$'   # the checklist is an internal owner document
 git ls-files --cached --others --exclude-standard -- "${INCLUDE[@]}" | grep -Ev "$EXCLUDE" > "$DST/.filelist"
 while IFS= read -r f; do mkdir -p "$DST/$(dirname "$f")"; cp -p "$f" "$DST/$f"; done < "$DST/.filelist"

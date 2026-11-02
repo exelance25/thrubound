@@ -31,7 +31,7 @@
 | Rule (source) | ThruBound | Result |
 |---|---|---|
 | Entry point marked `TSDK_ENTRYPOINT_FN` (quickstart; Headers and Entry Points) | yes | PASS |
-| Instruction data: docs read it with `tsdk_txn_get_instr_data`; `tsys_invoke` reference says the callee gets "a0 instruction data virtual address, a1 instruction data length"; Rust SDK: "the same bytes passed to your entry function" | `start(data, size)` uses a0/a1. This is also correct when called through CPI (for example from the Passkey Manager), where `tsdk_get_txn()` would return the outer transaction | PASS (documented choice) |
+| Instruction data: docs read it with `tsdk_txn_get_instr_data`; `tsys_invoke` reference says the callee gets "a0 instruction data virtual address, a1 instruction data length"; Rust SDK: "the same bytes passed to your entry function" | `start(data, size)` uses a0/a1. This is also correct when called through CPI (for example from the Wallet program's validate + target-instruction flow), where `tsdk_get_txn()` would return the outer transaction | PASS (documented choice) |
 | Validate sizes before reading structs (quickstart; Common Patterns) | every instruction checks its size first, and copies into an aligned local with `memcpy` (no unaligned casts) | PASS |
 | End with `tsdk_return` or `tsdk_revert` | yes | PASS |
 | `tsys_account_create`, then set writable, then resize (quickstart; Syscalls) | **was violated (SR-1)**, now fixed | PASS after fix |

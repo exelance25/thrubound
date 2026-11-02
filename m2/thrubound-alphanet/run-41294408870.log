@@ -1,0 +1,151 @@
+﻿2026-11-01T09:44:25.2851558Z ##[group]Run set -euo pipefail
+2026-11-01T09:44:25.2852431Z set -euo pipefail
+2026-11-01T09:44:25.2852907Z mkdir -p "$RUNNER_TEMP/thru" && cd "$RUNNER_TEMP/thru"
+2026-11-01T09:44:25.2853551Z base="https://github.com/Unto-Labs/thru/releases/download/${THRU_RELEASE}"
+2026-11-01T09:44:25.2854247Z curl -fsSL -o toolchain.tar.gz "$base/thru-toolchain-Linux-x86_64-${THRU_RELEASE}.tar.gz"
+2026-11-01T09:44:25.2854939Z curl -fsSL -o sdk.tar.gz "$base/thru-program-sdk-c-${THRU_RELEASE}.tar.gz"
+2026-11-01T09:44:25.2855551Z echo "${TOOLCHAIN_SHA256}  toolchain.tar.gz" | sha256sum -c -
+2026-11-01T09:44:25.2856098Z echo "${SDK_SHA256}  sdk.tar.gz" | sha256sum -c -
+2026-11-01T09:44:25.2856644Z tar xzf toolchain.tar.gz && tar xzf sdk.tar.gz && rm toolchain.tar.gz
+2026-11-01T09:44:25.2857130Z ls
+2026-11-01T09:44:25.2894151Z shell: /usr/bin/bash -e {0}
+2026-11-01T09:44:25.2894595Z env:
+2026-11-01T09:44:25.2894936Z   THRU_RELEASE: v0.4.2
+2026-11-01T09:44:25.2895507Z   TOOLCHAIN_SHA256: 0b07caad88918696ece94958a9b9525c5bfe4b8dd87d7cbe6440ba165f322686
+2026-11-01T09:44:25.2896162Z   SDK_SHA256: 74c9a763bb898df2bdf38b09f7d44e8dd860d65e5c45d41c532de49a9b6e9627
+2026-11-01T09:44:25.2896811Z   PROGRAM_SHA256: e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6
+2026-11-01T09:44:25.2897326Z ##[endgroup]
+2026-11-01T09:44:52.7989076Z toolchain.tar.gz: OK
+2026-11-01T09:44:52.8003822Z sdk.tar.gz: OK
+2026-11-01T09:45:08.9874729Z sdk.tar.gz
+2026-11-01T09:45:08.9876897Z thru-program-sdk-c-v0.4.2
+2026-11-01T09:45:08.9877456Z thru-toolchain-Linux-x86_64-v0.4.2
+﻿2026-11-01T09:45:08.9917230Z ##[group]Run set -euo pipefail
+2026-11-01T09:45:08.9917537Z set -euo pipefail
+2026-11-01T09:45:08.9917935Z OUT="$RUNNER_TEMP/build" TOOLCHAIN="$RUNNER_TEMP/thru/thru-toolchain-Linux-x86_64-${THRU_RELEASE}" \
+2026-11-01T09:45:08.9918517Z   SDK_SRC="$RUNNER_TEMP/thru/thru-program-sdk-c-${THRU_RELEASE}" bash thru/scripts/build_official.sh
+2026-11-01T09:45:08.9918983Z BIN="$RUNNER_TEMP/build/program/build/thruvm/bin/flowstate_c.bin"
+2026-11-01T09:45:08.9919291Z sha256sum "$BIN"
+2026-11-01T09:45:08.9919539Z echo "${PROGRAM_SHA256}  $BIN" | sha256sum -c -
+2026-11-01T09:45:08.9919818Z cp "$BIN" "$RUNNER_TEMP/flowstate_c.bin"
+2026-11-01T09:45:08.9938986Z shell: /usr/bin/bash -e {0}
+2026-11-01T09:45:08.9939211Z env:
+2026-11-01T09:45:08.9939427Z   THRU_RELEASE: v0.4.2
+2026-11-01T09:45:08.9939746Z   TOOLCHAIN_SHA256: 0b07caad88918696ece94958a9b9525c5bfe4b8dd87d7cbe6440ba165f322686
+2026-11-01T09:45:08.9940393Z   SDK_SHA256: 74c9a763bb898df2bdf38b09f7d44e8dd860d65e5c45d41c532de49a9b6e9627
+2026-11-01T09:45:08.9940850Z   PROGRAM_SHA256: e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6
+2026-11-01T09:45:08.9941170Z ##[endgroup]
+2026-11-01T09:45:09.8968332Z /home/runner/work/_temp/thru/thru-toolchain-Linux-x86_64-v0.4.2/bin/riscv64-unknown-elf-ar: creating /home/runner/work/_temp/build/sdk-build/thruvm/lib/libtn_sdk.a
+2026-11-01T09:45:11.9811191Z /home/runner/work/_temp/thru/thru-toolchain-Linux-x86_64-v0.4.2/bin/riscv64-unknown-elf-ar: creating /home/runner/work/_temp/build/program/build/thruvm/lib/libtn_sdk.a
+2026-11-01T09:45:12.0325340Z riscv64-unknown-elf-gcc (g5115c7e44) 15.2.0
+2026-11-01T09:45:12.0347643Z e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6  /home/runner/work/_temp/build/program/build/thruvm/bin/flowstate_c.bin
+2026-11-01T09:45:12.0354875Z e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6  /home/runner/work/_temp/build/program/build/thruvm/bin/flowstate_c.bin
+2026-11-01T09:45:12.0370850Z /home/runner/work/_temp/build/program/build/thruvm/bin/flowstate_c.bin: OK
+﻿2026-11-01T09:45:12.0417139Z ##[group]Run npm ci
+2026-11-01T09:45:12.0417383Z npm ci
+2026-11-01T09:45:12.0417666Z node alphanet-e2e.mjs "$RUNNER_TEMP/flowstate_c.bin" alphanet-evidence.json
+2026-11-01T09:45:12.0435831Z shell: /usr/bin/bash -e {0}
+2026-11-01T09:45:12.0436093Z env:
+2026-11-01T09:45:12.0436265Z   THRU_RELEASE: v0.4.2
+2026-11-01T09:45:12.0436600Z   TOOLCHAIN_SHA256: 0b07caad88918696ece94958a9b9525c5bfe4b8dd87d7cbe6440ba165f322686
+2026-11-01T09:45:12.0437035Z   SDK_SHA256: 74c9a763bb898df2bdf38b09f7d44e8dd860d65e5c45d41c532de49a9b6e9627
+2026-11-01T09:45:12.0437454Z   PROGRAM_SHA256: e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6
+2026-11-01T09:45:12.0437774Z ##[endgroup]
+2026-11-01T09:45:14.7112163Z 
+2026-11-01T09:45:14.7112902Z added 17 packages, and audited 18 packages in 3s
+2026-11-01T09:45:14.7113149Z 
+2026-11-01T09:45:14.7155583Z 10 packages are looking for funding
+2026-11-01T09:45:14.7156068Z   run `npm fund` for details
+2026-11-01T09:45:14.7156319Z 
+2026-11-01T09:45:14.7156534Z 1 moderate severity vulnerability
+2026-11-01T09:45:14.7156876Z 
+2026-11-01T09:45:14.7157173Z To address all issues (including breaking changes), run:
+2026-11-01T09:45:14.7157631Z   npm audit fix --force
+2026-11-01T09:45:14.7157817Z 
+2026-11-01T09:45:14.7157965Z Run `npm audit` for details.
+2026-11-01T09:45:15.5312368Z chain {
+2026-11-01T09:45:15.5312671Z   height: {
+2026-11-01T09:45:15.5312922Z     finalized: '4481659',
+2026-11-01T09:45:15.5313293Z     locallyExecuted: '4481659',
+2026-11-01T09:45:15.5313638Z     clusterExecuted: '4481659'
+2026-11-01T09:45:15.5313924Z   },
+2026-11-01T09:45:15.5314205Z   chainId: 1
+2026-11-01T09:45:15.5314609Z }
+2026-11-01T09:45:16.2428516Z tx ok       create EOA owner  sig=tsoDSQmufsUc2SuP1CLwvqT7Ut9qJxjNnNVTZOoCaVQd_5AKaOHRz5BFN_QnG7ESb4QfWo4QGH-9pp6bgvnpo6AiD3  vmError=0 user=0
+2026-11-01T09:45:16.2429940Z PASS  create EOA owner succeeds  — vmError=0 user=0
+2026-11-01T09:45:16.7514581Z tx ok       create EOA agent  sig=tsYqKaHWzvxVEY_NS1KYdrxFJcZtLRqv_vZ972XNfp2wHedAdBGd-jrGgaUMe6UL69In422g0PYgVy6wgH_02kByC_  vmError=0 user=0
+2026-11-01T09:45:16.7517157Z PASS  create EOA agent succeeds  — vmError=0 user=0
+2026-11-01T09:45:17.2742058Z tx ok       create EOA vendor  sig=ts8u3pGiXv_lzhshvIvbll1T8YUYRmCRczPP5Q_5TtUOqwOaKAsT6cBLFOruMNzWbd2SZnEhL6rZRyQjbI5MZUACFb  vmError=0 user=0
+2026-11-01T09:45:17.2762956Z PASS  create EOA vendor succeeds  — vmError=0 user=0
+2026-11-01T09:45:17.7958267Z tx ok       create EOA stranger  sig=ts0XHFPErlKma4DAXfdkP0vqrm9Y68cO9OzUp_pYnw2YSEmnltqWkV6NZq6F_KifrkuWaUxn53b3EWDprDmnHtCSQ9  vmError=0 user=0
+2026-11-01T09:45:17.7960331Z PASS  create EOA stranger succeeds  — vmError=0 user=0
+2026-11-01T09:45:18.3301170Z tx ok       faucet native 10000 -> owner (fee 0)  sig=tsNULMfSeMvSHeK-zbNLloNIRrvlYzziJWnS1bwvt0vwANcVEIcK-QL7NLxS_d_dQO6C3NHfHi-TCntsODeVODCB-T  vmError=0 user=0
+2026-11-01T09:45:18.3303328Z PASS  faucet native THRU to owner  — vmError=0 user=0
+2026-11-01T09:45:19.0730988Z tx ok       faucet native 10000 -> agent (fee 0)  sig=tszicG4tgrk1zbIiba99thvCLobm1EOO0PyWL11LhcdIgoObBUec6Xv6xttnsLSvQbwRt7m5kIi4z-41elBDlRBR_m  vmError=0 user=0
+2026-11-01T09:45:19.0733732Z PASS  faucet native THRU to agent  — vmError=0 user=0
+2026-11-01T09:45:19.6069536Z tx ok       faucet native 10000 -> stranger (fee 0)  sig=tsyX-qG4I5NCCznZqApByMYpzU2CIJsuxyscukXbiP0UuJXEohn_6fCZ3FVE0OESJ5I9qgJeKJku4NwOWSvlMICB77  vmError=0 user=0
+2026-11-01T09:45:19.6071939Z PASS  faucet native THRU to stranger  — vmError=0 user=0
+2026-11-01T09:45:20.1944549Z tx ok       token initialize_mint (no freeze authority)  sig=tszF6s1tkLaO6v5ZxKh85WjAHkzVp6O6kLPQyJKDoKCqHAvCkg-QrSohf-D9arjH52z7msNTNJ5K3lkgepDP5HAh9G  vmError=0 user=0
+2026-11-01T09:45:20.1947151Z PASS  token initialize_mint (no freeze authority) succeeds  — vmError=0 user=0
+2026-11-01T09:45:21.3278264Z PASS  test mint has no freeze authority  — {"decimals":0,"supply":"0","creator":"taX10LLQwX8ZXbZjK7U0poVaJ7GS153YJqn6PYFznglKBI","mintAuthority":"taX10LLQwX8ZXbZjK7U0poVaJ7GS153YJqn6PYFznglKBI","freezeAuthority":null,"hasFreezeAuthority":false,"ticker":"TBTEST"}
+2026-11-01T09:45:25.8331592Z PASS  program deployed via official deploy workflow  — program=taSNdMRdDn4VhJzVwTmD7XQeA9rWEv6UPl9tPa5vrCHLGQ sha256=e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6
+2026-11-01T09:45:25.8343181Z PASS  deployed image hash equals local build  — e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6 vs e0843ea2ac3ef917b765df9f7c8d5706a1d9938888a1a0019bc4726809b127a6
+2026-11-01T09:45:26.4735342Z tx ok       ThruBound INIT_VAULT  sig=tslgplwN5jVBaybhoQwcyjIZubv5y8U0WQxCwOL-ykeGMqL5TLSC59gSa-lC1v7Vqjex9diU6hUVdVfqogLXt0DBwe  vmError=0 user=0
+2026-11-01T09:45:26.4737833Z PASS  ThruBound INIT_VAULT succeeds  — vmError=0 user=0
+2026-11-01T09:45:26.7663863Z tx ok       token initialize_account vaultToken  sig=tsjyhWwtu_AVlO0woQyhUv2MAvUUvfbzRE2fdOi27mrX7aBY5rkQP3GCWzS-9_1B3DGqg2u6-lwNl-GzjnZeloDR84  vmError=0 user=0
+2026-11-01T09:45:26.7666629Z PASS  token initialize_account vaultToken succeeds  — vmError=0 user=0
+2026-11-01T09:45:27.0535758Z tx ok       token initialize_account vendorToken  sig=tsuRRBB1tIrEKxFTtBLugzifC_cdVrXBzN757YJivqlMnHM9t5Ny1ZmAuZy-W1q4l111kTix94O-T-_yAaPQxnCB4k  vmError=0 user=0
+2026-11-01T09:45:27.0538493Z PASS  token initialize_account vendorToken succeeds  — vmError=0 user=0
+2026-11-01T09:45:27.2901494Z tx ok       token initialize_account strangerToken  sig=tsXDN3GFo9hG99hU8vO9-8rluHvCfR27qWPNhcZi14o4ODN7CGIrheCyCONliI_2Rv6V9ekQin-avm6cPRqFfrBx-1  vmError=0 user=0
+2026-11-01T09:45:27.2904106Z PASS  token initialize_account strangerToken succeeds  — vmError=0 user=0
+2026-11-01T09:45:27.5711512Z tx ok       token initialize_account ownerToken  sig=tsGpq4oIeQkfND-uQxxs2QKpyDoHS2Rl-xRYHm_U03I7gBcaJufGc4DQsxQmkUaRhpBddgzn-rrmueIyaRrjJcDR0q  vmError=0 user=0
+2026-11-01T09:45:27.5713994Z PASS  token initialize_account ownerToken succeeds  — vmError=0 user=0
+2026-11-01T09:45:27.8485104Z tx ok       token mint_to 1000 -> vaultToken  sig=tsIiNof-IqTvaKA96UiQ0Sv4KvNeIIfs_22eZAYbSgbXStFT9Dlyr9KykvNZ8-3z_QmGRkpP_mjdqo6PZMJi-uCx-_  vmError=0 user=0
+2026-11-01T09:45:27.8487986Z PASS  token mint_to 1000 -> vaultToken succeeds  — vmError=0 user=0
+2026-11-01T09:45:28.1291865Z tx ok       ThruBound BIND_TOKEN (+ mint unfreezable check)  sig=tsP-woMDaZFhfkSg6gtSavYoJv98PoItOmhYwjlmNFZ2Ebis5NuQ-ihhokNACEaoiMKuNsH5R9Fh2yDE6k8nrTAhug  vmError=0 user=0
+2026-11-01T09:45:28.1294740Z PASS  ThruBound BIND_TOKEN (+ mint unfreezable check) succeeds  — vmError=0 user=0
+2026-11-01T09:45:28.4114609Z tx ok       ThruBound SET_AGENT (create)  sig=tsXKXZSocDYD9c0kvR_w7ktbGM0sa8gIYJRZ991XTZABqhTMsP7v1caxXfufyo0lKcl1krM1CEdnYDteNec5s4BCBV  vmError=0 user=0
+2026-11-01T09:45:28.4117369Z PASS  ThruBound SET_AGENT (create) succeeds  — vmError=0 user=0
+2026-11-01T09:45:28.6982304Z tx ok       ThruBound SET_RECIPIENT vendorToken  sig=tsgSsx4sctZ3awuv3OJ4Qm1FnWxYjZ6zx4HrckGCiY5n1lf2_wo_0PDC8Q9-wgkKD6WqxP6_pJYOeJcnQ5HLiIAiDM  vmError=0 user=0
+2026-11-01T09:45:28.6984804Z PASS  ThruBound SET_RECIPIENT vendorToken succeeds  — vmError=0 user=0
+2026-11-01T09:45:28.9795323Z tx ok       agent pays vendor 5 (instant)  sig=tsB60ApdnH5LaiJR3cbD-WKYQK6Ymqpx68jSx-iPVMqMKV1rbX3DJmpO_zsgo0f1XLSutEZAkTUfm7zjjnPULGBCEH  vmError=0 user=0
+2026-11-01T09:45:28.9798197Z PASS  agent pays vendor 5 (instant) succeeds  — vmError=0 user=0
+2026-11-01T09:45:29.0471098Z PASS  vendor received 5
+2026-11-01T09:45:29.2913213Z tx refused  agent tries 11 (> per-payment 10)  sig=tsxQa3XPnQw00x3zq4PvsRdguvUBdJaKWAHlzxSkMcEHQ4kgxn3lG458bEiqvkbkc_uLRRmLffZizyEvxrp-VCBx9n  vmError=-765 user=4111
+2026-11-01T09:45:29.2916235Z PASS  over-limit payment is refused on chain  — vmError=-765 userErrorCode=0x100f expected 0x100f
+2026-11-01T09:45:29.5746330Z tx refused  agent pays a stranger  sig=tspseDffOurvMYZM_GYhb5VUQ0LPmFJnAQ8nVOWx_OnImyr9e8WJGZGbogSFe2gSBC6Wgx_Rhmua3ZQKjs7Uz5CiFd  vmError=-765 user=4110
+2026-11-01T09:45:29.5750064Z PASS  payment to a non-allowlisted recipient is refused on chain  — vmError=-765 userErrorCode=0x100e expected 0x100e
+2026-11-01T09:45:29.8564167Z tx refused  agent replays nonce 0  sig=tsakW_gCepA3_IvxRk2UipHgk6FFQAhRMWJyc4tdS1CdQ45QExAr8zuFiWps1NZuR8y9zbxi87UNI0Wa-JabzfBxw0  vmError=-765 user=4108
+2026-11-01T09:45:29.8567860Z PASS  replayed nonce is refused on chain  — vmError=-765 userErrorCode=0x100c expected 0x100c
+2026-11-01T09:45:30.1486262Z tx refused  stranger signs as the agent  sig=ts92hyNctEcUSG-6g1ozaXSLMmAAXHJ3__IIsdm5kUC7lppq97A3K8m72JY0FwsvKChP4uQsg9LZQFL4BF-y9XARy2  vmError=-765 user=4100
+2026-11-01T09:45:30.1489788Z PASS  request signed by someone else is refused on chain  — vmError=-765 userErrorCode=0x1004 expected 0x1004
+2026-11-01T09:45:30.4312372Z tx ok       agent asks 9 (above threshold 5 -> pending)  sig=tsX11BesQNHG7pkzLl25V_P9UQ0VOXV3BEmIC_2pIQLAEaygZ9mSx5bJ-WN_kuE_tFXQimlHs4fFEpOtQUFMe3DxvA  vmError=0 user=0
+2026-11-01T09:45:30.4315401Z PASS  agent asks 9 (above threshold 5 -> pending) succeeds  — vmError=0 user=0
+2026-11-01T09:45:30.8923373Z tx refused  owner approves a tampered amount (8)  sig=tsDI2oy5FOcMyeQwjFL46aaIc-x4IwZDfHVWOwMybIY_mBpYqraIjEgTFb7Lk8p-L5Aa1EvA_Jt0GgN0FuN99IBR7_  vmError=-765 user=4119
+2026-11-01T09:45:30.8926788Z PASS  tampered approval is refused on chain  — vmError=-765 userErrorCode=0x1017 expected 0x1017
+2026-11-01T09:45:31.3079005Z tx ok       owner approves exactly the pending request  sig=tsshFhkmX3mfe6Fn65OFiIw7wJ7r0GLE8H4EnJ5oYlqYYyIyB6OzM4YotHUxK6slhiiUYSznynMsCNUPZpb-g_BB0c  vmError=0 user=0
+2026-11-01T09:45:31.3082001Z PASS  owner approves exactly the pending request succeeds  — vmError=0 user=0
+2026-11-01T09:45:32.4427737Z PASS  vendor balance 14 after approval
+2026-11-01T09:45:32.7415449Z tx refused  owner approves the same request again  sig=tszFV51LTydIiz2vqQsGSGljAKIr7-UR0XmRIHhwnTInanDnKEcJsmvpCfgBcJ07sdm-vi6NMsBP_zXwZM0Z0uDB9T  vmError=-765 user=4115
+2026-11-01T09:45:32.7418706Z PASS  second approval is refused on chain  — vmError=-765 userErrorCode=0x1013 expected 0x1013
+2026-11-01T09:45:33.2339443Z tx refused  token transfer vault->owner, owner signs  sig=tsELNwAdgS7HuC-k4EvaqAygLPWdsTr-d36X-8lzdy9XRXbb9UCJsieAN1HQRtigYa78LD7Sn1alOQxPig5wB4BB9F  vmError=-765 user=7
+2026-11-01T09:45:33.2342799Z PASS  KSI-1 direct transfer by the owner key is refused on chain  — vmError=-765 userErrorCode=0x7
+2026-11-01T09:45:33.5089766Z tx refused  token burn vault, vault PDA named as authority (unsigned)  sig=tstpqh9Wlwdl1aKQkS3u1MLQBoBCjDxMQnXkn1oRtmphFKJrZAJ-xAw5GjgISUe1-b3ysAoHh5Oh5jpUujMHxUChuf  vmError=-765 user=7
+2026-11-01T09:45:33.5093384Z PASS  KSI-1 burn with the vault as unsigned authority is refused on chain  — vmError=-765 userErrorCode=0x7
+2026-11-01T09:45:33.7729882Z tx refused  token burn vault, owner as authority  sig=tsRzmKNQRNKHo-ZWW7PwLtVbrFj81xFXT6OhH3SFzGUKUq4DGtoALlQ-xnIJoNWSFRqmPsvEhW05hETNAKlZbjChy_  vmError=-765 user=5
+2026-11-01T09:45:33.7733517Z PASS  KSI-1 burn by the owner key is refused on chain  — vmError=-765 userErrorCode=0x5
+2026-11-01T09:45:34.0522462Z tx refused  token close_account vault -> owner  sig=ts-dTyKriKUTLfi5XRkBGW8ZSTbh1__edHUFdf0M9VEVguvARWHE6qnkSOxTO0sFsQ1N6beNyyZvRnUhGu8Vr1CiFj  vmError=-765 user=11
+2026-11-01T09:45:34.0526221Z PASS  KSI-1 close of the vault token account is refused on chain  — vmError=-765 userErrorCode=0xb
+2026-11-01T09:45:34.3338788Z tx refused  token freeze vault (mint has no freeze authority)  sig=tsSSTvfNxNQHzXagJfusxg5p3oa46fUs7py-Ao4fJQfTxfWvBbbBBwRs2qqJsgRt9f6wodc37dzB0F1F_2rTMYBSCI  vmError=-765 user=18
+2026-11-01T09:45:34.3342558Z PASS  KSI-1 freeze of the vault token account is refused on chain  — vmError=-765 userErrorCode=0x12
+2026-11-01T09:45:34.5670988Z tx refused  token transfer vault->agent token, agent signs  sig=tsbEMk7rplUlk4ipqffiVEIf2bP90qt3kI3JZCG2AgVdGLvBHw1srV5Lwr2eTwaNCucAo3sWf0qEnNpTgEkHJkCyAB  vmError=-765 user=7
+2026-11-01T09:45:34.5674276Z PASS  KSI-1 direct transfer by the agent key is refused on chain  — vmError=-765 userErrorCode=0x7
+2026-11-01T09:45:34.6334498Z PASS  vault balance unchanged by the KSI-1 probes (986)
+2026-11-01T09:45:34.9127947Z tx ok       ThruBound REVOKE  sig=ts5uW1l5yxEUWM0H2NZsjAxzP9IQ-iimJO7w327CokUfiZKDa6iEDtFXvjlrMLMEs1scJ6LcJN3w3F36Ewf-ZYCyC1  vmError=0 user=0
+2026-11-01T09:45:34.9131363Z PASS  ThruBound REVOKE succeeds  — vmError=0 user=0
+2026-11-01T09:45:35.1899320Z tx refused  revoked agent tries to pay 1  sig=tsX2GmsVF2BUh0J422LOQXqfI--aTg2_B7W5vGUsSrN3vwxJ1onDeuKQEUALDMmXlwA7iKNjMoMTph-sxYv4PsAx9i  vmError=-765 user=4106
+2026-11-01T09:45:35.1903033Z PASS  payment after revocation is refused on chain  — vmError=-765 userErrorCode=0x100a expected 0x100a
+2026-11-01T09:45:35.4660311Z tx ok       ThruBound WITHDRAW 100  sig=tsJCdM5Vy9-vc-WIUMUVNOIXu93WNtIiWKSybpUCkwvP3e5c7UnKVFBOMhDHD8G80ckWwxY7GwVgYUGoYMWJknBhvN  vmError=0 user=0
+2026-11-01T09:45:35.4663667Z PASS  ThruBound WITHDRAW 100 succeeds  — vmError=0 user=0
+2026-11-01T09:45:35.6656108Z PASS  final balances vault 886 / vendor 14 / owner 100  — {"vault":"886","vendor":"14","owner":"100"}
+2026-11-01T09:45:35.6664260Z {"checks":42,"passed":42,"failed":0}
